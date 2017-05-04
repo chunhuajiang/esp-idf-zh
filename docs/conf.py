@@ -290,9 +290,17 @@ texinfo_documents = [
 # on_rtd is whether we are on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
+# otherwise, readthedocs.org uses their theme by default, so no need to specify it
+html_context = {
+    'display_github': True,
+    'github_user': 'tidyjiang8',
+    'github_repo': 'esp-idf-zh',
+    'github_version': 'zh/docs/' 
+}
+
 if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
-# otherwise, readthedocs.org uses their theme by default, so no need to specify it
+
