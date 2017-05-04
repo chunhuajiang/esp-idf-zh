@@ -1,6 +1,6 @@
-****************************
+***********************************
 在 Windows 上设置 Eclipse IDE
-****************************
+***********************************
 
 Configuring Eclipse on Windows requires some different steps. The full configuration steps for Windows are shown below.
 

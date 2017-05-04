@@ -1,12 +1,12 @@
 *************************************
-Standard Setup of Toolchain for Linux
+Linux 平台工具链的标准设置
 *************************************
 
 
-Install Prerequisites
+安装前提
 =====================
 
-To compile with ESP-IDF you need to get the following packages:
+要编译 ESP-IDF，你需要先安装如下的软件包。
 
 - CentOS 7::
 
@@ -21,10 +21,10 @@ To compile with ESP-IDF you need to get the following packages:
     sudo pacman -S --needed gcc git make ncurses flex bison gperf python2-pyserial
 
 
-Toolchain Setup
+工具链的设置
 ===============
 
-ESP32 toolchain for Linux is available for download from Espressif website:
+Linux 版的 ESP32 工具链可以从 Espressif 的网站下载：
 
 - for 64-bit Linux:
 
@@ -34,7 +34,7 @@ ESP32 toolchain for Linux is available for download from Espressif website:
 
   https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-61-gab8375a-5.2.0.tar.gz
 
-Download this file, then extract it in ``~/esp`` directory::
+下载完成后，将它解压到 ``~/esp`` 目录 ::
 
     mkdir -p ~/esp
     cd ~/esp
@@ -42,39 +42,37 @@ Download this file, then extract it in ``~/esp`` directory::
 
 .. _setup-linux-toolchain-add-it-to-path:
 
-The toolchain will be extracted into ``~/esp/xtensa-esp32-elf/`` directory.
+工具链将会被解压到 ``~/esp/xtensa-esp32-elf/`` 目录。
 
-To use it, you will need to update your ``PATH`` environment variable in ``~/.bash_profile`` file. To make ``xtensa-esp32-elf`` available for all terminal sessions, add the following line to your ``~/.bash_profile`` file::
+要使用工具链，你还需要在 ``~/.bash_profile`` 文件中更新环境变量 ``PATH``。要使 ``xtensa-esp32-elf`` 在所有的终端会话中有效，需要将下面这一行代码添加到你的 ``~/.bash_profile`` 文件中 ::
 
     export PATH=$PATH:$HOME/esp/xtensa-esp32-elf/bin
 
-Alternatively, you may create an alias for the above command. This way you can get the toolchain only when you need it. To do this, add different line to your ``~/.bash_profile`` file::
+可选地，你也可以给上面的命令创建一个别名。这样的好处是，你只在需要使用它的时候才获取工具链。你只需要将下面这行代码添加到 ``~/.bash_profile`` 文件中即可 ::
 
     alias get_esp32="export PATH=$PATH:$HOME/esp/xtensa-esp32-elf/bin"
 
-Then when you need the toolchain you can type ``get_esp32`` on the command line and the toolchain will be added to your ``PATH``.
+然后，当你需要使用工具链时，在命令行输入 ``get_esp32``，然后工具链会自动添加到你的 ``PATH``中。
 
 
-Arch Linux Users
+Arch Linux 用户
 ----------------
 
-To run the precompiled gdb (xtensa-esp32-elf-gdb) in Arch Linux requires ncurses 5, but Arch uses ncurses 6. 
+在 Arch Linux 中运行预编译的 gdb(xtensa-esp32-elf-gdb) 需要　ncurses 5，但是　Arch 使用的是　ncurses 6。
 
-Backwards compatibility libraries are available in AUR_ for native and lib32 configurations:
+在 AUR_ 中有可用于本地和 lib32 配置的后向兼容库：
 
 - https://aur.archlinux.org/packages/ncurses5-compat-libs/
 - https://aur.archlinux.org/packages/lib32-ncurses5-compat-libs/
 
-Alternatively, use crosstool-NG to compile a gdb that links against ncurses 6.
+可选地，你也可以使用 crosstool-NG 编译一个链接 ncurses 6 的 gdb。
 
-
-Next Steps
+后续步骤
 ==========
 
-To carry on with development environment setup, proceed to section :ref:`get-started-get-esp-idf`.
+要继续设置开发环境，请参考 :ref:`get-started-get-esp-idf` 一节。
 
-
-Related Documents
+修改文档
 =================
 
 .. toctree::

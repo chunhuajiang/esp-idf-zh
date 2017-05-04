@@ -86,7 +86,7 @@ https://dl.espressif.com/dl/xtensa-esp32-elf-win32-1.22.0-61-gab8375a-5.2.0.zip
 Next Steps
 ==========
 
-To carry on with development environment setup, proceed to section :ref:`get-started-get-esp-idf`.
+要继续设置开发环境，请参考 :ref:`get-started-get-esp-idf` 一节。
 
 
 .. _MSYS2: https://msys2.github.io/

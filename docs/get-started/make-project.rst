@@ -1,16 +1,15 @@
-Build and Flash with Make
+使用 Make 进行编译和烧写
 =========================
 
 
-Finding a project
+找一个工程
 -----------------
 
-As well as the `esp-idf-template <https://github.com/espressif/esp-idf-template>`_ project, ESP-IDF comes with some example projects on github in the :idf:`examples` directory.
+除 `esp-idf-template <https://github.com/espressif/esp-idf-template>`_ 工程之外，ESP-IDF 还在 :idf:`examples` 目录下附带了若干示例工程。
 
-Once you've found the project you want to work with, change to its directory and you can configure and build it.
+找到你想要使用的工程后，进入该目录，然后你就可以对它进行配置、编译。
 
-
-Configuring your project
+配置你的工程
 ------------------------
 
 ::
@@ -18,56 +17,55 @@ Configuring your project
     make menuconfig
 
 
-Compiling your project
+编译你的工程
 ----------------------
 
 ::
 
     make all
 
-... will compile app, bootloader and generate a partition table based on the config.
+... 将会编译 app、bootloader 和一个基于配置所产生的分区表。
 
 
-Flashing your project
+烧写你的工程
 ---------------------
 
-When ``make all`` finishes, it will print a command line to use esptool.py to flash the chip. However you can also do this from make by running::
+当 ``make all`` 完成后，它会打印一行命令，提示使用 esptool.py 来烧写芯片。不过，你也可以直接运行如下命令来烧写 ::
 
     make flash
 
-This will flash the entire project (app, bootloader and partition table) to a new chip. The settings for serial port flashing can be configured with `make menuconfig`.
+该命令将会烧写整个工程（app、bootloader 和分区表）到芯片中。用于烧写程序的串行端口可以使用 `make menuconfig` 进行配置。
 
-You don't need to run ``make all`` before running ``make flash``, ``make flash`` will automatically rebuild anything which needs it.
+你不需要在运行 ``make flash`` 前运行 ``make all``，因为 ``make flash`` 会自动重新编译它所需要的任何文件。
 
 
-Compiling & Flashing Just the App
+仅编译 & 烧写 APP
 ---------------------------------
 
-After the initial flash, you may just want to build and flash just your app, not the bootloader and partition table:
+完成第一次烧写后，你可以只编译和烧写应用程序，而不需要 bootloader 和分区表：
 
-* ``make app`` - build just the app.
-* ``make app-flash`` - flash just the app.
+* ``make app`` - 仅编译应用程序
+* ``make app-flash`` - 仅烧写应用程序
 
-``make app-flash`` will automatically rebuild the app if it needs it.
+``make app-flash`` 会自动重新编译它所需要的任何文件。
 
-There's no downside to reflashing the bootloader and partition table each time, if they haven't changed.
+如果 bootloader 和分区表没有改动，则不需要重新烧写。
 
-
-The Partition Table
+分区表
 -------------------
 
-Once you've compiled your project, the "build" directory will contain a binary file with a name like "my_app.bin". This is an ESP32 image binary that can be loaded by the bootloader.
+工程编译完成后，"build" 目录下将会产生一个名字类似于 "my_app.bin" 的二进制文件，这是可以被 ESP32 bootloader 加载的二进制镜像。
 
-A single ESP32's flash can contain multiple apps, as well as many kinds of data (calibration data, filesystems, parameter storage, etc). For this reason, a partition table is flashed to offset 0x8000 in the flash.
+一片 ESP32 flash 上面可以包含多个 app 和多种数据（校正数据、文件系统、参数存储器等）。因此，一个分区表被烧写到 flash 的地址 0x8000 处。
 
-Each entry in the partition table has a name (label), type (app, data, or something else), subtype and the offset in flash where the partition is loaded.
+分区表的每个入口都有一个名字（label）、类型（app、数据或其它一些类型）、子类型和分区表被加载时在 flash 中的偏移。
 
-The simplest way to use the partition table is to `make menuconfig` and choose one of the simple predefined partition tables:
+使用分区表最简单的方法是运行 `make menuconfig` 并选择一个预定义的分区表：
 
 * "Single factory app, no OTA"
 * "Factory app, two OTA definitions"
 
-In both cases the factory app is flashed at offset 0x10000. If you `make partition_table` then it will print a summary of the partition table.
+在这两个情况下，工厂 app 都会被烧写到偏移地址 0x10000 处。如果你输入 如果你输入 `make partition_table` 命令，它将会打印分区表的参数。
 
-For more details about :doc:`partition tables <../api-guides/partition-tables>` and how to create custom variations, view the :doc:`documentation <../api-guides/partition-tables>`.
+关于 :doc:`分区表 <../api-guides/partition-tables>` 和如何创建自定义变量的更多细节，请参考 :doc:`此文档 <../api-guides/partition-tables>`。
 

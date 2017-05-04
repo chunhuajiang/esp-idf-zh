@@ -64,4 +64,4 @@ Toolchain will be built in ``~/esp/crosstool-NG/builds/xtensa-esp32-elf``. Follo
 Next Steps
 ==========
 
-To carry on with development environment setup, proceed to section :ref:`get-started-get-esp-idf`.
+要继续设置开发环境，请参考 :ref:`get-started-get-esp-idf` 一节。

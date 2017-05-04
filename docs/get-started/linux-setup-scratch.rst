@@ -1,14 +1,14 @@
 **********************************
-Setup Linux Toolchain from Scratch
+Scratch 设置 Linux 工具链
 **********************************
 
-The following instructions are alternative to downloading binary toolchain from Espressif website. To quickly setup the binary toolchain, instead of compiling it yourself, backup and proceed to section :doc:`linux-setup`.
+下列指令是可选的，用于从 Espressif 网站下载二进制工具链。如果需呀快速设置工具链，而不是自己编译，请回到 :doc:`linux-setup` 一节。
 
 
-Install Prerequisites
+安装前提
 =====================
 
-To compile with ESP-IDF you need to get the following packages:
+要编译 ESP-IDF，你需要先安装如下的软件包。
 
 - Ubuntu and Debian::
 
@@ -19,10 +19,10 @@ To compile with ESP-IDF you need to get the following packages:
     sudo pacman -S --needed gcc git make ncurses flex bison gperf python2-pyserial
 
 
-Compile the Toolchain from Source
+从源码编译工具链
 =================================
 
-- Install dependencies:
+- 安装依赖:
 
   - CentOS 7::
 
@@ -44,23 +44,23 @@ Compile the Toolchain from Source
 
         TODO
 
-Download ``crosstool-NG`` and build it::
+下载 ``crosstool-NG`` 并编译 ::
 
     cd ~/esp
     git clone -b xtensa-1.22.x https://github.com/espressif/crosstool-NG.git
     cd crosstool-NG
     ./bootstrap && ./configure --enable-local && make install
 
-Build the toolchain::
+编译工具链 ::
 
     ./ct-ng xtensa-esp32-elf
     ./ct-ng build
     chmod -R u+w builds/xtensa-esp32-elf
 
-Toolchain will be built in ``~/esp/crosstool-NG/builds/xtensa-esp32-elf``. Follow :ref:`instructions for standard setup <setup-linux-toolchain-add-it-to-path>` to add the toolchain to your ``PATH``.
+工具链将会被编译到 ``~/esp/crosstool-NG/builds/xtensa-esp32-elf``。请参考 :ref:`标准设置指令 <setup-linux-toolchain-add-it-to-path>` 将工具链添加到你的 ``PATH``中。
 
 
-Next Steps
+后续步骤
 ==========
 
-To carry on with development environment setup, proceed to section :ref:`get-started-get-esp-idf`.
+要继续设置开发环境，请参考 :ref:`get-started-get-esp-idf` 一节。
