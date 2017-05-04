@@ -1,45 +1,43 @@
 ***************************************
-Standard Setup of Toolchain for Windows
+Windows 平台工具链的标准设置
 ***************************************
 
-Introduction
+引言
 ============
 
-Windows doesn't have a built-in "make" environment, so as well as installing the toolchain you will need a GNU-compatible environment. We use the MSYS2_ environment to provide this. You don't need to use this environment all the time (you can use :doc:`Eclipse <eclipse-setup>` or some other front-end), but it runs behind the scenes.
+Windows 没有内置的 "make" 环境，因此如果要安装工具链，你需要一个 GNU-兼容 环境。我们这里使用 MSYS2_ 来提供该环境。你可能不需要一直使用这个环境（你可以使用 :doc:`Eclipse <eclipse-setup>` 或其它前段工具），但是它在你的屏幕后面隐藏着。
 
 
-Toolchain Setup 
+工具栏的设置
 ===============
 
-The quick setup is to download the Windows all-in-one toolchain & MSYS zip file from dl.espressif.com:
+快速设置的方法是从 dl.espressif.com 下载集成在一起的工具链 & MSYS zip 压缩文件：
 
 https://dl.espressif.com/dl/esp32_win32_msys2_environment_and_toolchain-20170330.zip
 
-Unzip the zip file to ``C:\`` (or some other location, but this guide assumes ``C:\``) and it will create an ``msys32`` directory with a pre-prepared environment.
+将 zip 压缩文件解压到 ``C:\`` (或其它路径，但是这里假设解压缩到 ``C:\``)，它会使用预先准备的环境创建一个 ``msys32`` 目录。
 
-
-Check it Out
+检出
 ============
 
-Open an MSYS2 terminal window by running ``C:\msys32\mingw32.exe``. The environment in this window is a bash shell. 
+运行 ``C:\msys32\mingw32.exe`` 可以打开 MSYS2 的终端窗口。该窗口的环境是一个 bash shell。
 
 .. figure:: ../_static/msys2-terminal-window.png
     :align: center
     :alt: MSYS2 terminal window
     :figclass: align-center
 
-    MSYS2 terminal window
+    MSYS2 终端窗口
 
-Use this window in the following steps setting up development environment for ESP32.
+后续步骤将会使用这个窗口来为 ESP32 设置开发环境。
 
-
-Next Steps
+后续步骤
 ==========
 
-To carry on with development environment setup, proceed to section :ref:`get-started-get-esp-idf`.
+要继续设置开发环境，请参考 :ref:`get-started-get-esp-idf` 一节。
 
 
-Related Documents
+相关文档
 =================
 
 .. toctree::

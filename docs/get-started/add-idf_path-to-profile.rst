@@ -1,7 +1,7 @@
-Add IDF_PATH to User Profile
-============================
+将 IDF_PATH 添加到 User Profile
+================================
 
-To preserve setting of ``IDF_PATH`` environment variable between system restarts, add it to the user profile, following instructions below.
+要使环境变量 ``IDF_PATH`` 在系统重启后依然有效，需要将它添加到用户 profile，具体方法请参考下面的指令。
 
 
 .. _add-idf_path-to-profile-windows:
@@ -9,51 +9,50 @@ To preserve setting of ``IDF_PATH`` environment variable between system restarts
 Windows
 -------
 
-The user profile scripts are contained in ``C:/msys32/etc/profile.d/`` directory. They are executed every time you open an MSYS2 window.
+用户 profile 脚本位于 ``C:/msys32/etc/profile.d/`` 目录，它会在你每次打开一个新的 MSYS2 窗口时被执行。
 
-#. Create a new script file in ``C:/msys32/etc/profile.d/`` directory. Name it ``export_idf_path.sh``.
+#. 在 ``C:/msys32/etc/profile.d/`` 目录创建一个新的脚本文件，将将其命名为 ``export_idf_path.sh``。
 
-#. Identify the path to ESP-IDF directory. It is specific to your system configuration and may look something like ``C:\msys32\home\Krzysztof\esp\esp-idf``
+#. 指定 ESP-IDF 目录所在路径。这与你的系统配置相关，比如你的路径可能是 ``C:\msys32\home\Krzysztof\esp\esp-idf``。
 
-#. Add the ``export`` command to the script file, e.g.::
+#. 向脚本文件中添加 ``export`` 命令，例如 ::
 
        export IDF_PATH="C:/msys32/home/Krzysztof/esp/esp-idf"
 
-   Remember to replace back-slashes with forward-slashes in the original Windows path.
+   记得在原始 Windows 路径中将反斜线替换为斜线。
+   
+#. 保存脚本文件。
 
-#. Save the script file.
-
-#. Close MSYS2 window and open it again. Check if ``IDF_PATH`` is set, by typing::
+#. 关闭 MSYS2 窗口后重新打开。检查 ``IDF_PATH`` 是否被设置了，输入 ::
 
        printenv IDF_PATH
 
-   The path previusly entered in the script file should be printed out.
-
-If you do not like to have ``IDF_PATH`` set up permanently in user profile, you should enter it manually on opening of an MSYS2 window::
+   之前在脚本文件中输入的路劲会被打印出来。
+   
+如果你不希望将 ``IDF_PATH`` 永久设置到 user profile 中，你需要在每次重新打开 MSYS2 窗口时手工输入下面的命令 ::
 
     export IDF_PATH="C:/msys32/home/Krzysztof/esp/esp-idf"
 
-If you got here from section :ref:`get-started-setup-path`, while installing s/w for ESP32 development, then go back to section :ref:`get-started-start-project`. 
+如果你是从 :ref:`get-started-setup-path` 一节中进入本页的，可以直接点击 :ref:`get-started-start-project` 跳转回去。
 
 
 .. _add-idf_path-to-profile-linux-macos:
 
-Linux and MacOS
+Linux 和 MacOS
 ---------------
 
-Set up ``IDF_PATH`` by adding the following line to ``~/.bash`` file: ::
+直接将下面一行代码添加到 ``~/.bash`` 文件就能设置 ``IDF_PATH``  ::
 
     export IDF_PATH=~/esp/esp-idf
 
-Log off and log in back to make this change effective. 
+注销并重新登录后，修改将生效。
 
-If you do not like to have ``IDF_PATH`` set up permanently, you should enter it manually in terminal window on each restart or logout.
+如果你不希望永久设置 ``IDF_PATH``，你需要在每次重新打开终端窗口后手工输入上面的代码。
 
-Run the following command to check if ``IDF_PATH`` is set::
+运行下面的命令可以检查 ``IDF_PATH`` 是否设置正确 ::
 
     printenv IDF_PATH
 
-The path previously entered in ``~/.bash`` file (or set manually) should be printed out.
+之前在 ``~/.bash`` 文件中输入（或者手工输入）的路径将会被打印出来。
 
-
-If you got here from section :ref:`get-started-setup-path`, while installing s/w for ESP32 development, then go back to section :ref:`get-started-start-project`.
+如果你是从 :ref:`get-started-setup-path` 一节中进入本页的，可以直接点击 :ref:`get-started-start-project` 跳转回去。
