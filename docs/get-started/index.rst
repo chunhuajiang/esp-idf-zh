@@ -1,44 +1,43 @@
 ﻿***********
-Get Started
+快速入门
 ***********
 
-To develop applications for ESP32 you need:
+开发 ESP32 应用程序需要准备：
 
-* **PC** loaded with either Windows, Linux or Mac operating system
-* **Toolchain** to build the **Application** for ESP32
-* **ESP-IDF** that essentially contains API for ESP32 and scripts to operate the **Toolchain**
-* A text editor to write programs (**Projects**) in C, e.g. `Eclipse <http://www.eclipse.org/>`_
-* **ESP32** board itself
+* 安装有 Windows、Linux 或者 Mac 操作系统的 **PC**
+* 用于 ESP32 编译 **应用程序** 的 **工具链**
+* **ESP-IDF** —— 包含 ESP32 的 API 和用于操作 **工具链** 的脚本
+* 写 C 语言程序的文本编辑器，例如 `Eclipse <http://www.eclipse.org/>`_
+* **ESP32** 开发板
 
 .. figure:: ../_static/what-you-need.png
     :align: center
     :alt: Development of applications for ESP32
     :figclass: align-center
 
-    Development of applications for ESP32
+    为 ESP32 开发应用程序
 
-Preparation of development environment consists of three steps:
+开发环境的准备工作包括以下三部分：
 
-1. Setup of **Toolchain**
-2. Getting of **ESP-IDF** from GitHub
-3. Installation and configuration of **Eclipse**
+1. 设置 **工具链**
+2. 从 GitHub 上面获取 **ESP-IDF**
+3. 安装和配置 **Eclipse**
 
-You may skip the last step, if you prefer to use different editor.
+如果你喜欢用其它的编辑器，则可以跳过最后一步。
 
-Having environment set up, you are ready to start the most interesting part - the application development. This process may be summarized in four steps:
+环境设置好后，你就可以开始开发应用程序了。整个过程可以概括为如下四步：
 
-1. Configuration of a **Project** and writing the code
-2. Compilation of the **Project** and linking it to build an **Application**
-3. Flashing (uploading) of the **Application** to **ESP32**
-4. Monitoring / debugging of the **Application**
+1. 配置 **工程** 并编写代码
+2. 编译 **工程** 并链接成一个 **应用程序**
+3. 烧写 **应用程序** 到 **ESP32** 上面
+4. 监视/调试 **应用程序**
 
-See instructions below that will walk you through these steps.
+请继续阅读下面的指令，它将带你完成这些步骤。
 
-
-Guides
+指导
 ======
 
-If you have one of ESP32 development boards listed below, click on provided links to get you up and running.
+如果你有下面所列举的某块 ESP32 开发板，请点击对应的链接，它会教你如何让你的板子跑起来。
 
 .. toctree::
     :maxdepth: 1
@@ -46,24 +45,21 @@ If you have one of ESP32 development boards listed below, click on provided link
     ESP32 DevKitC <get-started-devkitc>
     ESP-WROVER-KIT <get-started-wrover-kit>
 
-If you have different board, move to sections below.
-
+如果你有其它的开发板，请查看下面的内容。
 
 .. _get-started-setup-toochain:
 
-Setup Toolchain
+设置工具链
 ===============
 
-Depending on your experience and preferences, you may follow standard installation process or customize your environment. Instructions immediately below are for standard installation. To set up the system your own way go to section :ref:`get-started-customized-setup`.
-
+你可以完全遵循标准安装过程或者自定义你的环境，这完全依赖于你个人的经验和喜好。下面的指令用于标准安装。如果要在你自己的系统上进行设置，请移步 :ref:`get-started-customized-setup`。
 
 .. _get-started-standard-setup:
 
-Standard Setup of Toolchain
+工具链的标准设置
 ---------------------------
 
-The quickest way to start development with ESP32 is by installing prebuild toolchain. Pick up your O/S below and follow provided instructions.
-
+用 ESP32 进行开发最快的方法是安装预编译的工具链。请根据你的操作系选择点击对应的链接，并按照该链接中的指令进行安装。
 
 .. toctree::
     :hidden:
@@ -93,16 +89,15 @@ The quickest way to start development with ESP32 is by installing prebuild toolc
 
 .. note::
 
-    We are using ``~/esp`` directory to install prebuild toolchain, ESP-IDF and sample applications. You can use different directory, but need to adjust respective commands.
-
-Once you are done with setting up the toolchain then go to section :ref:`get-started-get-esp-idf`.
-
+    我们默认使用 ``~/esp`` 目录来安装预编译的工具链、ESP-IDF 和示例程序。你也可以使用其它目录，但是需要注意调整对应的命令。
+    
+设置完工具链后，你可以进入 :ref:`get-started-get-esp-idf` 一节。
 
 .. highlight:: bash
 
 .. _get-started-customized-setup:
 
-Customized Setup of Toolchain
+工具链的自定义设置
 -----------------------------
 
 Instead of downloading binary toolchain from Espressif website (:ref:`get-started-standard-setup` above) you may build the toolchain yourself.
