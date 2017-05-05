@@ -1,62 +1,54 @@
-Build System
+构建系统
 ************
 
-This document explains the Espressif IoT Development Framework build system and the
-concept of "components"
+本节阐释了乐鑫 IoT 开发框架的编译系统以及 “组件（components）” 的概念。
 
-Read this document if you want to know how to organise a new ESP-IDF project.
+如果你想知道如何组织已给新的 ESP-IDF 工程的话，请继续阅读本文档。
 
-We recommend using the esp-idf-template_ project as a starting point for your project.
+我们推荐你使用 esp-idf-template_ 工程作为你的工程的起点。
 
-Using the Build System
+使用构建系统
 ======================
 
-The esp-idf README file contains a description of how to use the build system to build your project.
+esp-idf 的 README 文件包含了如何使用构建系统构建你自己的工程的描述。
 
-Overview
+概述
 ========
 
-An ESP-IDF project can be seen as an amalgamation of a number of components.
-For example, for a webserver that shows the current humidity, there could be:
+ESP-IDF 工程可以看做大量组件构成的集合。例如，一个显示当前空气湿度的 webserver 可能包括：
 
-- The ESP32 base libraries (libc, rom bindings etc)
-- The WiFi drivers
-- A TCP/IP stack
-- The FreeRTOS operating system
-- A webserver
-- A driver for the humidity sensor
-- Main code tying it all together
+- ESP32 基本库（libc，rom bindings 等）
+- WiFi drivers
+- TCP/IP 协议栈
+- FreeRTOS 操作系统
+- webserver
+- 湿度传感器
+- 将它们集成到一个的主代码
 
-ESP-IDF makes these components explicit and configurable. To do that,
-when a project is compiled, the build environment will look up all the
-components in the ESP-IDF directories, the project directories and
-(optionally) in additional custom component directories. It then
-allows the user to configure the ESP-IDF project using a a text-based
-menu system to customize each component. After the components in the
-project are configured, the build process will compile the project.
+ESP-IDF 中组件的概念非常清晰明确，且是可配置的。当编译工程时，构建环境将查找 ESP-IDF 目录下面的所有组件、工程目录以及额外自定义的目录（可选）。它允许用户通过一个基于文本
+的菜单系统对 ESP-IDF 工程进行配置，以自定义每个组件。当工程中的组件被配置后，构建过程将会编译工程。
 
-Concepts
+概念
 --------
 
-- A "project" is a directory that contains all the files and configuration to build a single "app" (executable), as well as additional supporting output such as a partition table, data/filesystem partitions, and a bootloader.
+- "工程（project）" 是一个目录，它包含需要编译成 “app”（以及一些额外支持的输出，例如分区表，数据/文件系统分区，bootloader）的所有文件和配置。
 
-- "Project configuration" is held in a single file called sdkconfig in the root directory of the project. This configuration file is modified via ``make menuconfig`` to customise the configuration of the project. A single project contains exactly one project configuration.
+- "工程配置（Project configuration）" 是一个位于工程根目录的叫做 sdkconfig 的文件。这个配置文件可以通过 ``make menuconfig`` 来自定义工程的配置项。单个工程确切地包含一个工程配置。
 
-- An "app" is an executable which is built by esp-idf. A single project will usually build two apps - a "project app" (the main executable, ie your custom firmware) and a "bootloader app" (the initial bootloader program which launches the project app).
+- "应用程序（app）" 是一个由 esp-idf 编译成的可执行文件。单个工程通常会被编译成两个 app - 一个 "工程 app" （主可执行文件，即你的自定义固件）和一个 "bootloader app"（加载工程 app 的初始化 bootloader 程序）。
 
-- "components" are modular pieces of standalone code which are compiled into static libraries (.a files) and linked into an app. Some are provided by esp-idf itself, others may be sourced from other places.
+- "组件（component）" 是由相对独立的代码构成的模块，它们会被编译乘静态库（.a 文件）并被链接到 app 中。某些组件是由 esp-idf 自身提供的，另外一些组件可能在其它地方。
 
-Some things are not part of the project:
+下面这些东西不属于工程的内容：
 
-- "ESP-IDF" is not part of the project. Instead it is standalone, and linked to the project via the ``IDF_PATH`` environment variable which holds the path of the ``esp-idf`` directory. This allows the IDF framework to be decoupled from your project.
+- "ESP-IDF" 不是工程的一部分，而是一个相对独立的代码，通过环境变量 ``IDF_PATH`` 链接到工程。这能减小 IED 框架与工程直接的耦合性。
 
-- The toolchain for compilation is not part of the project. The toolchain should be installed in the system command line PATH, or the path to the toolchain can be set as part of the compiler prefix in the project configuration.
+- 用于编译的工具链不是工程的一部分。工具链应当安装在系统命令行的 PATH 中，或者工程配置中所配置的工具链前缀所对应的路径中。
 
-
-Example Project
+示例工程
 ---------------
 
-An example project directory tree might look like this::
+一个示例工程目录大概如下 ::
 
     - myProject/
                  - Makefile
@@ -74,31 +66,29 @@ An example project directory tree might look like this::
 
                  - build/
 
-This example "myProject" contains the following elements:
+这个示例 "myProject" 包含如下元素：
 
-- A top-level project Makefile. This Makefile set the ``PROJECT_NAME`` variable and (optionally) defines
-  other project-wide make variables. It includes the core ``$(IDF_PATH)/make/project.mk`` makefile which
-  implements the rest of the ESP-IDF build system.
+- 一个顶层工程 Makefile。这个 Makefile 设置变量 ``PROJECT_NAME``，并（可选）定义项目范围内的其它 make 变量。 它包含了核心 makefile ``$(IDF_PATH)/make/project.mk``，这个核心 makefile 实现了 ESP-IDF 构建系统的余下部分。
 
-- "sdkconfig" project configuration file. This file is created/updated when "make menuconfig" runs, and holds configuration for all of the components in the project (including esp-idf itself). The "sdkconfig" file may or may not be added to the source control system of the project.
+- "sdkconfig" 工程配置文件。这个文件会在运行 "make menuconfig" 时被创建/更新，它包含了工程中的所有组件（包括 esp-idf 自身）。"sdkconfig" 可以被添加到工程的源码控制系统中，也可以不添加到工程的源码控制系统中。
 
-- Optional "components" directory contains components that are part of the project. A project does not have to contain custom components of this kind, but it can be useful for structuring reusable code or including third party components that aren't part of ESP-IDF.
+- 可选的 "组件（components）" 目录包含了一些组件，这些组件属于工程的一部分。工程并非必须包含这种自定义的组件，但是这通常有利于构架可充用的代码或者包含不属于 ESP-IDF 的第三方组件。
 
-- "main" directory is a special "pseudo-component" that contains source code for the project itself. "main" is a default name, the Makefile variable ``SRCDIRS`` defaults to this but can be set to look for pseudo-components in other directories.
+- "main" 目录是一个特殊的 "虚拟组件"，它包含工程自身的源代码。"main" 是一个特殊的名字，Makefile 变量 ``SRCDIRS`` 默认就是这个值。用于也可以通过设置该变量让构建系统在其它目录来查找这个虚拟组件。
 
-- "build" directory is where build output is created. After the make process is run, this directory will contain interim object files and libraries as well as final binary output files. This directory is usually not added to source control or distributed with the project source code.
+- "build" 是构架系统所创建的构建输出目录。运行 make 命令后，这个变量将包含临时目标文件、库文件和最中国的二进制输出文件。该目录通常不会添加到源代码控制系统中，或者不会随着工程源代码一起发布。
 
-Component directories contain a component makefile - ``component.mk``. This may contain variable definitions
-to control the build process of the component, and its integration into the overall project. See `Component Makefiles` for more details.
+组件目录包含一个组件 makefile - ``component.mk``。它里面可能包含用于控制组件编译过程的变量定义，被集成到整个工程。更多细节请参考 `Component Makefiles`。
 
-Each component may also include a ``Kconfig`` file defining the `component configuration` options that can be set via the project configuration. Some components may also include ``Kconfig.projbuild`` and ``Makefile.projbuild`` files, which are special files for `overriding parts of the project`.
+每个组件可以包含一个 ``Kconfig`` 文件，用于定义可以通过工程配置进行设置的 `组件配置` 选项。
+一些组件可能还包括 ``Kconfig.projbuild`` 和 ``Makefile.projbuild`` —— 用于 `覆盖构成的某一部分` 的特殊文件。
 
-Project Makefiles
+工程 Makefile
 -----------------
 
-Each project has a single Makefile that contains build settings for the entire project. By default, the project Makefile can be quite minimal.
+每个工程都有一个包含整个工程构建设置的 Makefile。默认情况下，工程的 Makefile 非常简单。
 
-Minimal Example Makefile
+最小的 Makefile 示例
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -108,15 +98,15 @@ Minimal Example Makefile
    include $(IDF_PATH)/make/project.mk
 
 
-Mandatory Project Variables
+强制的工程变量
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- ``PROJECT_NAME``: Name of the project. Binary output files will use this name - ie myProject.bin, myProject.elf.
+- ``PROJECT_NAME``: 工程的名字。二进制输出文件会使用这个名字 - 即 myProject.bin, myProject.elf。
 
-Optional Project Variables
+可选的工程变量
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-These variables all have default values that can be overridden for custom behaviour. Look in ``make/project.mk`` for all of the implementation details.
+下面的这些变量都有一个默认值，但是你可以覆盖它们来实现一些自定义的行为。具体的实现细节请查看 ``make/project.mk``。
 
 - ``PROJECT_PATH``: Top-level project directory. Defaults to the directory containing the Makefile. Many other project variables are based on this variable. The project path cannot contain spaces.
 - ``BUILD_DIR_BASE``: The build directory for all objects/libraries/binaries. Defaults to ``$(PROJECT_PATH)/build``.
@@ -126,7 +116,7 @@ These variables all have default values that can be overridden for custom behavi
 - ``SRCDIRS``: Directories under the main project directory which contain project-specific "pseudo-components". Defaults to 'main'. The difference between specifying a directory here and specifying it under ``EXTRA_COMPONENT_DIRS`` is that a directory in ``SRCDIRS`` is a component itself (contains a file "component.mk"), whereas a directory in ``EXTRA_COMPONENT_DIRS`` contains component directories which contain a file "component.mk". See the `Example Project` for a concrete case of this.
 
 
-Component Makefiles
+组件的 Makefile
 -------------------
 
 Each project contains one or more components, which can either be part of esp-idf or added from other component directories.
