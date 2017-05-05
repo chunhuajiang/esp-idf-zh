@@ -45,7 +45,7 @@ ESP-IDF 编程指导(中文版)
    快速入门 - Get Started  <get-started/index> 
    API 参考手册 - API Reference <api-reference/index>
    硬件参考手册 - H/W Reference <hw-reference/index>
-   API 指导 - API Guides - API 指导 <api-guides/index>
+   API 指导 - API Guides <api-guides/index>
    贡献代码 - Contribute <contribute/index>
    资源 - Resources <resources>
    版权 - Copyrights <COPYRIGHT>
