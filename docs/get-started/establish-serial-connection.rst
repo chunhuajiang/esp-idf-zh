@@ -1,27 +1,27 @@
-Establish Serial Connection with ESP32
+与 ESP32 建立串口连接
 ======================================
 
-This section provides guidance how to establish serial connection between ESP32 and PC.
+本节用于说明如何在 ESP32 和 PC 之间建立串口连接。
 
 
-Connect ESP32 to PC
+将 ESP32 连接到 PC
 --------------------
 
-Connect the ESP32 board to the PC using the USB cable. If device driver does not install automatically, identify USB to serial converter chip on your ESP32 board (or external converter dongle), search for drivers in internet and install them.
+使用 USB 线将 ESP32 板子和 PC 连接在一起。如果你的设备驱动没有自动安装，请先确认你 ESP32 板子（或者外部转换器 dongle）上面的 USB 转串口芯片的型号，然后在互联网上搜索对应的驱动并将其安装好。
 
-Below are the links to drivers for ESP32 boards produced by Espressif:
+下面的链接包含乐鑫生产的 ESP32 开发板的驱动程序：
 
 * ESP32 Core Board - `CP210x USB to UART Bridge VCP Drivers <http://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers>`_
 
 * ESP32 WROVER KIT and ESP32 Demo Board - `FTDI Virtual COM Port Drivers <http://www.ftdichip.com/Drivers/D2XX.htm>`_
 
 
-Check port on Windows
+在 Windows 上查看端口
 ---------------------
 
-Check the list of identified COM ports in the Windows Device Manager. Disconnect ESP32 and connect it back, to verify which port disappears from the list and then shows back again. 
+在 Windows 设备管理器中查看系统所识别到的 COM 端口。断开 ESP32 并重新连接，看看哪个端口从列表中消失了然后又显示出来了。
 
-Figures below show serial port for ESP32 DevKitC and ESP32 WROVER KIT
+下图显示了 ESP32 DevKitC 和 ESP32 WROVER KIT 的串口
 
 .. figure:: ../_static/esp32-devkitc-in-device-manager.png
     :align: center
@@ -38,10 +38,10 @@ Figures below show serial port for ESP32 DevKitC and ESP32 WROVER KIT
     Two USB Serial Ports of ESP-WROVER-KIT in Windows Device Manager
 
 
-Check port on Linux and MacOS
+在 Linux 和 MacOS 上查看端口
 -----------------------------
 
-To check the device name for the serial port of your ESP32 board (or external converter dongle), run this command two times, first with the board / dongle unplugged, then with plugged in. The port which appears the second time is the one you need:
+要查看 ESP32 板子（或外部转换器）上面的串口的设备名，运行下面的命令两次，第一次运行前将板子/dognle断开，第二次运行前再将其插上。第二次出现的端口号就是你需要的：
 
 Linux ::
 
@@ -52,29 +52,29 @@ MacOS ::
     ls /dev/tty.*
 
 
-Verify serial connection
+验证串口通信
 ------------------------
 
-Now verify is serial connection is operational. You can do it using a serial terminal program. In this example we will use `PuTTY SSH Client <http://www.putty.org/>`_ that is avilable for both Windows and Linux. You can use other serial program and set communication parameters like below.
+验证串口通信是可选的。你可以使用一个串口终端程序完成它。在这个例子中，我们使用的是 `PuTTY SSH Client <http://www.putty.org/>`_ ，它同时支持 Linux 和 Windows。你也可以使用其它串口工具，并设置如下的参数。
 
-Run terminal, set identified serial port, baud rate = 115200, data bits = 8, stop bits = 1, and parity = N. Below are example screen shoots of setting the port and such transmission parameters (in short described as  115200-8-1-N) on Windows and Linux. Remember to select exactly the same serial port you have identified in steps above.
+运行终端，设置端口号，波特率 115200，数据位 8，停止位 1，奇偶 N。下面分别是在 Windows 和 Linux 下面配置这些传输参数（简单的描述就是 115200-8-1-N）的例子。请一定选择你上面说识别出来的端口号。
 
 .. figure:: ../_static/putty-settings-windows.png
     :align: center
     :alt: Setting Serial Communication in PuTTY on Windows
     :figclass: align-center
 
-    Setting Serial Communication in PuTTY on Windows
+    在 Windows 设置 PuTTY 的串口通信
 
 .. figure:: ../_static/putty-settings-linux.png
     :align: center
     :alt: Setting Serial Communication in PuTTY on Linux
     :figclass: align-center
 
-    Setting Serial Communication in PuTTY on Linux
+    在 Linux 设置 PuTTY 的串口通信
 
 
-Then open serial port in terminal and check, if you see any log printed out by ESP32. The log contents will depend on application loaded to ESP32. An example log by ESP32 is shown below.
+然后在终端中打开串口，并查看是否有 ESP32 的消息打印出来。消息的内容是跟你加载到 ESP32 中的程序有关的，例如：
 
 .. highlight:: none
 
@@ -99,10 +99,11 @@ Then open serial port in terminal and check, if you see any log printed out by E
 
     ...
 
-If you see some legible log, it means serial connection is working and you are ready to proceed with installation and finally upload of application to ESP32. 
+如果你看到人类可识别的打印消息，表示串口连接工作正常，你可以继续安装并将应用程序下载到 ESP32 中。
+
 
 .. note::
 
-    Close serial terminal after verification that communication is working. In next step we are going to use another application to upload ESP32. This application will not be able to access serial port while it is open in terminal.
+    验证串口通信后，请先关闭串口终端。在下一步中，我们将会使用另一个应用程序进行下载。当串口打开时，这个应用程序就无法串口。
 
-If you got here from section :ref:`get-started-connect` when installing s/w for ESP32 development, then go back to section :ref:`get-started-configure`.
+如果你是从 :ref:`get-started-connect`跳转到此处的，点击链接 :ref:`get-started-configure` 回到之前的章节。
