@@ -3,8 +3,8 @@
 应用程序示例
 -------------------
 
-Log library is commonly used by most of esp-idf components and examples. For demonstration of log functionality check :idf:`examples` folder of `espressif/esp-idf <https://github.com/espressif/esp-idf>`_ repository, that among others, contains the following examples:
- 
+大多数 esp-idf 组件和例程都使用了日志（Log）库。日志功能的演示请参考 `espressif/esp-idf <https://github.com/espressif/esp-idf>`_ 仓库的 :idf:`examples` 目录，建议可以参考这些示例：
+
 * :example:`system/ota` 
 * :example:`storage/sd_card` 
 * :example:`protocols/https_request` 

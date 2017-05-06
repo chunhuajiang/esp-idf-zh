@@ -1,47 +1,39 @@
-Over The Air Updates (OTA)
+空中升级(OTA)
 ==========================
 
-OTA Process 概述
+OTA 过程概述
 ^^^^^^^^^^^^^^^^^^^^
 
-The OTA update mechanism allows a device to update itself based on data received while the normal firmware is running
-(for example, over WiFi or Bluetooth.)
+OTA 升级机制允许常规固件在运行时基于它所接收的数据对设备进行升级（通过 WiFI 或者蓝牙）。
 
-OTA requires configuring the :doc:`Partition Table <../../api-guides/partition-tables>` of the device with at least two "OTA app slot"
-partitions (ie `ota_0` and `ota_1`) and an "OTA Data Partition".
+OTA 需要配置设备的 :doc:`Partition Table <../../api-guides/partition-tables>`，且至少需要两个 "OTA app" 分区（即 `ota_0` 和 `ota_1`）和一个 "OTA 数据分区"。
 
-The OTA operation functions write a new app firmware image to whichever OTA app slot is not currently being used for
-booting. Once the image is verified, the OTA Data partition is updated to specify that this image should be used for the
-next boot.
+OTA 会将新的 app 固件镜像写到当前未用于启动程序的那个 OTA app 分区。当镜像校验完成后，OTA 数据分区会被更新，表示下一次启动时将使用该镜像。
+
 
 .. _ota_data_partition:
 
-OTA Data Partition
+OTA 数据分区
 ^^^^^^^^^^^^^^^^^^
 
-An OTA data partition (type ``data``, subtype ``ota``) must be included in the :doc:`Partition Table <../../api-guides/partition-tables>`
-of any project which uses the OTA functions.
+使用 OTA 功能的产品必须在 :doc:`Partition Table <../../api-guides/partition-tables>` 中包含一个 OTA 数据分区。
 
-For factory boot settings, the OTA data partition should contain no data (all bytes erased to 0xFF). In this case the
-esp-idf software bootloader will boot the factory app if it is present in the the partition table. If no factory app is
-included in the partition table, the first available OTA slot (usually ``ota_0``) is booted.
+对于工厂启动设置，OTA 数据分区应当不包含数据（所有的字节被擦除为 0xFF）。在这种情况下，如果分区表中存在工厂 app，esp-idf 软件的 bootloader 会启动工厂 app。如果分区表中不存在工厂 app，则会启动第一个有效的 OTA 分区（通常是 ``ota_0``）。
 
-After the first OTA update, the OTA data partition is updated to specify which OTA app slot partition should be booted next.
+当第一次 OTA 更新后，OTA 数据分区将会被更新，表示表示下一次启动时将使用哪个 OTA app 分区。
 
-The OTA data partition is two flash sectors (0x2000 bytes) in size, to prevent problems if there is a power failure
-while it is being written. Sectors are independently erased and written with matching data, and if they disagree a
-counter field is used to determine which sector was written more recently.
+OTA 数据分期是两个 flash 扇区（0x2000 字节），以消除正在写时供电失败的问题。如果没有计数字段表明哪个扇区在最近被写过，则两个扇区会被独立擦除并写入匹配的数据。
 
-See also
+See Also
 --------
 
-* :doc:`Partition Table documentation <../../api-guides/partition-tables>`
-* :doc:`Lower-Level SPI Flash/Partition API <../storage/spi_flash>`
+* :doc:`分区表文档 <../../api-guides/partition-tables>`
+* :doc:`底层 SPI Flash/分区 API <../storage/spi_flash>`
 
 应用程序示例
 -------------------
 
-End-to-end example of OTA firmware update workflow: :example:`system/ota`.
+端到端的 OTA 固件升级流程请你参考： :example:`system/ota`。
 
 API 参考手册
 -------------
