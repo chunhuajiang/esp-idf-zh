@@ -1,36 +1,36 @@
 BLUFI API
 =========
 
-Overview
+Over概述view
 --------
-BLUFI is a profile based GATT to config ESP32 WIFI to connect/disconnect AP or setup a softap and etc.
-Use should concern these things: 
-1. The event sent from profile. Then you need to do something as the event indicate.
-2. Security reference. You can write your own Security functions such as symmetrical encryption/decryption and checksum functions. Even you can define the "Key Exchange/Negotiation" procedure.
+BLUFI 是一个基于 GATT 的属性，用于配置 ESP32 WIFI 与 AP 的连接/断开连接，或者设置 softap 等。在使用时应当关注如下两点：
 
-Application Example
+1. 从 profile 发送的事件。你需要根据事件的指示完成某些工作。
+2. 安全引用。你可以自己写安全函数，例如对称加密/解密、校验和等函数。你甚至可以定义 "Key Exchange/Negotiation" 过程。
+
+应用程序示例
 -------------------
 
-Check :example:`bluetooth` folder in ESP-IDF examples, which contains the following example:
+请检查 ESP-IDF 示例中的 :example:`bluetooth` 文件夹，它包含如下示例：
 
 :example:`bluetooth/blufi` 
 
-  This is a BLUFI demo. This demo can set ESP32's wifi to softap/station/softap&station mode and config wifi connections.
+  这是一个 BLUFI demo。该 demo 可以设置 ESP32 的 wifi 为 softap/station/softap&station 模式，并且可以配置 wifi 连接。
+  
 
-
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_blufi_api.h`
 
-Macros
+宏
 ^^^^^^
 
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_blufi_event_cb_t
@@ -39,7 +39,7 @@ Type Definitions
 .. doxygentypedef:: esp_blufi_decrypt_func_t
 .. doxygentypedef:: esp_blufi_checksum_func_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_blufi_cb_event_t
@@ -47,7 +47,7 @@ Enumerations
 .. doxygenenum:: esp_blufi_init_state_t
 .. doxygenenum:: esp_blufi_deinit_state_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_blufi_extra_info_t
@@ -117,7 +117,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_blufi_register_callbacks

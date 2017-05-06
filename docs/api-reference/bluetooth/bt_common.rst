@@ -1,5 +1,5 @@
-BT COMMON
-=========
+BT 通用部分
+========================
 
 .. toctree::
    :caption: Bluetooth Common Defines and APIs

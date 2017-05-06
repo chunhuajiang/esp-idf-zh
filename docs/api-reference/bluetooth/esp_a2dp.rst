@@ -1,32 +1,32 @@
 Bluetooth A2DP API
 ==================
 
-Overview
+概述
 --------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-Application Example
+
+应用程序示例
 -------------------
 
-Check :example:`bluetooth` folder in ESP-IDF examples, which contains the following examples:
+请检查 ESP-IDF 示例中的 :example:`bluetooth` 文件夹，它包含如下示例：
 
 :example:`bluetooth/a2dp_sink`
 
-  This is a A2DP sink client demo. This demo can be discovered and connected by A2DP source device and receive the audio stream from remote device.
+  这是一个 A2DP sink 客户端 demo。该 demo 可以被 A2DP 设备发现和连接，从远程设备接收音频数据。
 
-
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_a2dp_api.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_A2D_MCT_SBC
@@ -39,14 +39,14 @@ Macros
 .. doxygendefine:: ESP_A2D_CIE_LEN_M24
 .. doxygendefine:: ESP_A2D_CIE_LEN_ATRAC
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_a2d_mct_t
 .. doxygentypedef:: esp_a2d_cb_t
 .. doxygentypedef:: esp_a2d_data_cb_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_a2d_connection_state_t
@@ -54,7 +54,7 @@ Enumerations
 .. doxygenenum:: esp_a2d_audio_state_t
 .. doxygenenum:: esp_a2d_cb_event_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_a2d_cb_param_t
@@ -70,7 +70,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_a2d_register_callback

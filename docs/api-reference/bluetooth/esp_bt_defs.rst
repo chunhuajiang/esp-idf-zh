@@ -1,12 +1,12 @@
 BT GENERIC DEFINES
 ==================
 
-Overview
+概述
 --------
 
 `Instructions`_
 
-Application Example
+应用程序示例
 -------------------
 
 `Instructions`_
@@ -14,16 +14,16 @@ Application Example
 .. _Instructions: ../template.html
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_bt_defs.h`
 
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_BT_OCTET16_LEN
@@ -40,14 +40,14 @@ Macros
 .. doxygendefine:: ESP_BD_ADDR_STR
 .. doxygendefine:: ESP_BD_ADDR_HEX
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_bt_octet16_t
 .. doxygentypedef:: esp_bt_octet8_t
 .. doxygentypedef:: esp_bd_addr_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_bt_status_t
@@ -55,11 +55,11 @@ Enumerations
 .. doxygenenum:: esp_bd_addr_type_t
 .. doxygenenum:: esp_ble_addr_type_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 
-Functions
+函数
 ^^^^^^^^^
 
 

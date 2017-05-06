@@ -1,4 +1,4 @@
-CLASSIC BT
+经典 BT
 ==========
 
 .. toctree::

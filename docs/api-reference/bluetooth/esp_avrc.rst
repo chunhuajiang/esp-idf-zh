@@ -1,14 +1,14 @@
-BT AVRCP APIs
+BT AVRCP API
 =============
 
-Overview
+概述
 --------
 
-Bluetooth AVRCP reference APIs.
+蓝牙 AVRCP 参考 API。
 
 `Instructions`_
 
-Application Example
+应用程序示例
 -------------------
 
 `Instructions`_
@@ -16,25 +16,25 @@ Application Example
 .. _Instructions: ../template.html
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_avrc_api.h`
 
 
-Macros
+宏
 ^^^^^^
 
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_avrc_ct_cb_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_avrc_features_t
@@ -42,7 +42,7 @@ Enumerations
 .. doxygenenum:: esp_avrc_pt_cmd_state_t
 .. doxygenenum:: esp_avrc_ct_cb_event_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_avrc_ct_cb_param_t
@@ -55,7 +55,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_avrc_ct_register_callback

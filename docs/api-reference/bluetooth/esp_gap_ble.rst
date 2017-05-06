@@ -1,26 +1,26 @@
 GAP API
 =======
 
-Overview
+概述
 --------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-Application Example
+应用程序示例
 -------------------
 
-Check :example:`bluetooth` folder in ESP-IDF examples, which contains the following examples:
+请检查 ESP-IDF 示例中的 :example:`bluetooth` 文件夹，它包含如下示例：
 
 :example:`bluetooth/gatt_server`, :example:`bluetooth/gatt_client` 
 
-  The two demos use different GAP APIs, such like advertising, scan, set device name and others.
-
-API Reference
+  这两个 demos 使用不同的 GAP API，例如广播、扫描、设置设备名等。
+  
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_gap_ble_api.h`
