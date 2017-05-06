@@ -1,13 +1,12 @@
-Bluetooth API
+蓝牙 API
 *************
 
 .. toctree::
    :maxdepth: 2
 
-   Bluetooth Controller && VHCI <controller_vhci>
-   Bluetooth Common <bt_common>
-   Bluetooth LE <bt_le>
-   Bluetooth Classic BT <classic_bt>
+   蓝牙控制器 && VHCI <controller_vhci>
+   蓝牙通用说明 <bt_common>
+   低功耗蓝牙 <bt_le>
+   经典蓝牙 <classic_bt>
 
-
-Example code for this API section is provided in :example:`bluetooth` directory of ESP-IDF examples.
+ESP-IDF 示例目录下的 :example:`bluetooth` 目录下的示例程序演示了如何使用这些 API。

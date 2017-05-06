@@ -1,4 +1,4 @@
-CLASSIC BLUETOOTH GAP API
+经典蓝牙 GAP API
 =========================
 
 概述

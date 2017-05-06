@@ -11,12 +11,11 @@ GATT CLIENT API
 应用程序示例
 -------------------
 
-Check :example:`bluetooth` folder in ESP-IDF examples, which contains the following examples:
+请检查 ESP-IDF 示例中的 :example:`bluetooth` 文件夹，它包含如下示例：
 
 :example:`bluetooth/gatt_client`
 
-  This is a GATT client demo. This demo can scan devices, connect to the GATT server and discover the service.
-
+  这是一个 GATT 客户端 demo。这个 demo 可以扫描设备、连接到 GATT 服务端以及发下服务。
 
 API 参考手册
 -------------
