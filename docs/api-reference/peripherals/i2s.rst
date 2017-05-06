@@ -1,7 +1,7 @@
 I2S
 ===
 
-Overview
+概述
 --------
 
 ESP32 contains two I2S peripherals. These peripherals can be configured to input and output sample data via the I2S driver.
@@ -10,7 +10,7 @@ The I2S peripheral supports DMA meaning it can stream sample data without requir
 
 I2S output can also be routed directly to the Digital/Analog Converter output channels (GPIO 25 & GPIO 26) to produce analog output directly, rather than via an external I2S codec.
 
-Application Example
+应用程序示例
 -------------------
 
 A full I2S example is available in esp-idf: :example:`peripherals/i2s`.
@@ -78,15 +78,15 @@ Short example configuring I2S to use internal DAC for analog output::
 
         i2s_driver_uninstall(i2s_num); //stop & destroy i2s driver
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * `components/driver/include/driver/i2s.h`
 
-Data Structures
+Data 结构体
 ^^^^^^^^^^^^^^^
 
   .. doxygenstruct:: i2s_config_t
@@ -96,12 +96,12 @@ Data Structures
   .. doxygenstruct:: i2s_pin_config_t
      :members:
 
-Macros
+宏
 ^^^^^^
 
   .. doxygendefine:: I2S_PIN_NO_CHANGE
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
   .. doxygenenum:: i2s_bits_per_sample_t
@@ -113,7 +113,7 @@ Enumerations
   .. doxygenenum:: i2s_mode_t
   .. doxygenenum:: i2s_event_type_t
 
-Functions
+函数
 ^^^^^^^^^
 
   .. doxygenfunction:: i2s_set_pin

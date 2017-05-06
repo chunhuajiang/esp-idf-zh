@@ -1,14 +1,14 @@
 GATT CLIENT API
 ===============
 
-Overview
+概述
 --------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-Application Example
+应用程序示例
 -------------------
 
 Check :example:`bluetooth` folder in ESP-IDF examples, which contains the following examples:
@@ -18,31 +18,31 @@ Check :example:`bluetooth` folder in ESP-IDF examples, which contains the follow
   This is a GATT client demo. This demo can scan devices, connect to the GATT server and discover the service.
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_gattc_api.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_GATT_DEF_BLE_MTU_SIZE
 .. doxygendefine:: ESP_GATT_MAX_MTU_SIZE
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_gattc_cb_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_gattc_cb_event_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_ble_gattc_cb_param_t
@@ -100,7 +100,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_ble_gattc_register_callback

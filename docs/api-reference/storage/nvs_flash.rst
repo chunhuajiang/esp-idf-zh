@@ -1,6 +1,6 @@
 .. include:: ../../../components/nvs_flash/README.rst
 
-Application Example
+应用程序示例
 -------------------
 
 Two examples are provided in :example:`storage` directory of ESP-IDF examples:
@@ -23,16 +23,16 @@ Two examples are provided in :example:`storage` directory of ESP-IDF examples:
   Example also shows how to implement diagnostics if read / write operation was successful.
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`nvs_flash/include/nvs_flash.h`
   * :component_file:`nvs_flash/include/nvs.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_ERR_NVS_BASE
@@ -50,17 +50,17 @@ Macros
 .. doxygendefine:: ESP_ERR_NVS_INVALID_LENGTH
 .. doxygendefine:: ESP_ERR_NVS_NO_FREE_PAGES
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: nvs_handle
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: nvs_open_mode
 
-Functions
+函数
 ^^^^^^^^^
 .. doxygenfunction:: nvs_flash_init
 .. doxygenfunction:: nvs_open

@@ -1,7 +1,7 @@
 Interrupt allocation
 ====================
 
-Overview
+概述
 --------
 
 The ESP32 has two cores, with 32 interrupts each. Each interrupt has a certain priority level, most (but not all) interrupts are connected
@@ -83,19 +83,19 @@ It can also be useful to keep an interrupt handler in IRAM if it is called very 
 
 Refer to the :ref:`SPI flash API documentation <iram-safe-interrupt-handlers>` for more details.
 
-Application Example
+应用程序示例
 -------------------
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`esp32/include/esp_intr_alloc.h`
 
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_INTR_FLAG_LEVEL1
@@ -112,7 +112,7 @@ Macros
 .. doxygendefine:: ESP_INTR_FLAG_IRAM
 .. doxygendefine:: ESP_INTR_FLAG_INTRDISABLED
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_intr_mark_shared

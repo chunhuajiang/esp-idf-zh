@@ -1,7 +1,7 @@
 GPIO & RTC GPIO
 ===============
 
-Overview
+概述
 --------
 
 The ESP32 chip features 40 physical GPIO pads. Some GPIO pads cannot be used or do not have the corresponding pin on the chip package(refer to technical reference manual). Each pad can be used as a general purpose I/O or can be connected to an internal peripheral signal.
@@ -11,21 +11,21 @@ The ESP32 chip features 40 physical GPIO pads. Some GPIO pads cannot be used or 
 
 There is also separate "RTC GPIO" support, which functions when GPIOs are routed to the "RTC" low-power and analog subsystem. These pin functions can be used when in deep sleep, when the :doc:`Ultra Low Power co-processor <../../api-guides/ulp>` is running, or when analog functions such as ADC/DAC/etc are in use.
 
-Application Example
+应用程序示例
 -------------------
 
 GPIO output and input interrupt example: :example:`peripherals/gpio`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/gpio.h`
   * :component_file:`driver/include/driver/rtc_io.h`
 
-Macros
+宏
 ^^^^^^
 
 Normal GPIO
@@ -112,7 +112,7 @@ Normal GPIO
 .. doxygendefine:: GPIO_IS_VALID_GPIO
 .. doxygendefine:: GPIO_IS_VALID_OUTPUT_GPIO
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 Normal GPIO
@@ -121,7 +121,7 @@ Normal GPIO
 .. doxygentypedef:: gpio_isr_t
 .. doxygentypedef:: gpio_isr_handle_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 Normal GPIO
@@ -139,7 +139,7 @@ RTC GPIO
 
 .. doxygenenum:: rtc_gpio_mode_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 Normal GPIO
@@ -148,7 +148,7 @@ Normal GPIO
 .. doxygenstruct:: gpio_config_t
     :members:
 
-Functions
+函数
 ^^^^^^^^^
 
 Normal GPIO

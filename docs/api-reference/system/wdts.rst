@@ -1,7 +1,7 @@
 Watchdogs
 =========
 
-Overview
+概述
 --------
 
 Esp-idf has support for two types of watchdogs: a task watchdog as well as an interrupt watchdog. Both can be
@@ -53,17 +53,17 @@ CPU. This makes it very hard to debug code; that is why the OpenOCD config will 
 This does mean that you will not get any warnings or panics from either the task or interrupt watchdog when the ESP32
 is connected to OpenOCD via JTAG.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`esp32/include/esp_int_wdt.h`
   * :component_file:`esp32/include/esp_task_wdt.h`
 
 
-Functions
+函数
 ---------
 
 .. doxygenfunction:: esp_int_wdt_init

@@ -1,12 +1,12 @@
 CLASSIC BLUETOOTH GAP API
 =========================
 
-Overview
+概述
 --------
 
 `Instructions`_
 
-Application Example
+应用程序示例
 -------------------
 
 `Instructions`_
@@ -14,33 +14,33 @@ Application Example
 .. _Instructions: ../template.html
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_gap_bt_api.h`
 
 
-Macros
+宏
 ^^^^^^
 
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_bt_scan_mode_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_bt_gap_set_scan_mode

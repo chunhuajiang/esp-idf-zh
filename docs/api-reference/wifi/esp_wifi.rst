@@ -1,39 +1,39 @@
 Wi-Fi
 =====
 
-Overview
+概述
 --------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-Application Example
+应用程序示例
 -------------------
 
 Simple code showing how to connect ESP32 module to an Access Point: `esp-idf-template <https://github.com/espressif/esp-idf-template>`_.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`esp32/include/esp_wifi.h`
 
-Macros
+宏
 ------
 
 .. doxygendefine:: WIFI_INIT_CONFIG_DEFAULT
 
 
-Type Definitions
+类型定义
 ----------------
 
 .. doxygentypedef:: wifi_promiscuous_cb_t
 .. doxygentypedef:: esp_vendor_ie_cb_t
 
-Functions
+函数
 ---------
 
 .. doxygenfunction:: esp_wifi_init

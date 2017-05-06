@@ -1,7 +1,7 @@
 LED Control
 ===========
 
-Overview
+概述
 --------
 
 The LED control module is primarily designed to control the intensity of LEDs, although it can be used to generate PWM signals for other purposes as well. 
@@ -9,31 +9,31 @@ It has 16 channels which can generate independent waveforms that can be used to 
 as the low-speed channels can be driven from one of four high-speed/low-speed timers. The PWM controller also has the ability to automatically increase or 
 decrease the duty cycle gradually, allowing for fades without any processor interference.
 
-Application Example
+应用程序示例
 -------------------
 
 LEDC change duty cycle and fading control example: :example:`peripherals/ledc`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/ledc.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: LEDC_APB_CLK_HZ
 .. doxygendefine:: LEDC_REF_CLK_HZ
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: ledc_isr_handle_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: ledc_mode_t
@@ -44,7 +44,7 @@ Enumerations
 .. doxygenenum:: ledc_channel_t
 .. doxygenenum:: ledc_timer_bit_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: ledc_channel_config_t
@@ -54,7 +54,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: ledc_channel_config

@@ -1,7 +1,7 @@
 Deep Sleep
 ==========
 
-Overview
+概述
 --------
 
 ESP32 is capable of deep sleep power saving mode. In this mode CPUs, most of the RAM, and all the digital peripherals which are clocked from APB_CLK are powered off. The only parts of the chip which can still be powered on are: RTC controller, RTC peripherals (including ULP coprocessor), and RTC memories (slow and fast).
@@ -115,7 +115,7 @@ The following function can be used to check which wakeup source has triggered wa
 .. doxygenfunction:: esp_deep_sleep_get_ext1_wakeup_status
 
 
-Application Example
+应用程序示例
 -------------------
  
 Implementation of basic functionality of deep sleep is shown in :example:`protocols/sntp` example, where ESP module is periodically waken up to retrive time from NTP server.

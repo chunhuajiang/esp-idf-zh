@@ -1,14 +1,14 @@
 GATT SERVER API
 ===============
 
-Overview
+概述
 --------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-Application Example
+应用程序示例
 -------------------
 
 Check :example:`bluetooth` folder in ESP-IDF examples, which contains the following example:
@@ -17,31 +17,31 @@ Check :example:`bluetooth` folder in ESP-IDF examples, which contains the follow
 
   This is a GATT server demo. Use GATT API to create a GATT server with send advertising. This GATT server can be connected and the service can be discovery.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_gatts_api.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_GATT_PREP_WRITE_CANCEL
 .. doxygendefine:: ESP_GATT_PREP_WRITE_EXEC
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_gatts_cb_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_gatts_cb_event_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_ble_gatts_cb_param_t
@@ -105,7 +105,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_ble_gatts_register_callback

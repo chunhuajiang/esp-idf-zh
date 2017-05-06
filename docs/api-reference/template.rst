@@ -15,7 +15,7 @@ API 文档模板
    4. Optionally provide description right in this file.
    5. Once done, remove all instructions like this one and any superfluous headers.
 
-Overview
+概述
 --------
 
 .. note::
@@ -33,7 +33,7 @@ Overview
      * ``^``, for subsubsections
      * ``"``, for paragraphs
 
-Application Example
+应用程序示例
 -------------------
 
 .. note::
@@ -49,7 +49,7 @@ Application Example
    7. Include flow diagram and screenshots of application output if applicable.
    8. Finally add in this section synopsis of each example together with link to respective folder in ``esp-idf/examples/``.
   
-API Reference
+API 参考手册
 -------------
 
 .. note::
@@ -60,23 +60,23 @@ API Reference
    2. Provide list of API members divided into sections. 
    3. Use corresponding ``.. doxygen..`` directives, so member documentation is auto updated.
 
-     * Data Structures -``.. doxygenstruct::`` together with ``:members:``
-     * Macros - ``.. doxygendefine::``
-     * Type Definitions - ``.. doxygentypedef::``
-     * Enumerations - ``.. doxygenenum::``
-     * Functions - ``.. doxygenfunction::``
+     * Data 结构体 -``.. doxygenstruct::`` together with ``:members:``
+     * 宏 - ``.. doxygendefine::``
+     * 类型定义 - ``.. doxygentypedef::``
+     * 枚举 - ``.. doxygenenum::``
+     * 函数 - ``.. doxygenfunction::``
 
      See `Breathe documentation <https://breathe.readthedocs.io/en/latest/directives.html>`_ for additional information. 
 
    4. Once done remove superfluous headers.
    5. When changes are committed and documentation is build, check how this section rendered. :doc:`Correct annotations <../contribute/documenting-code>` in respective header files, if required.
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * `path/header-file.h`
 
-Data Structures
+Data 结构体
 ^^^^^^^^^^^^^^^
 
 ::
@@ -84,28 +84,28 @@ Data Structures
   .. doxygenstruct:: name_of_structure
      :members:
 
-Macros
+宏
 ^^^^^^
 
 ::
 
   .. doxygendefine:: name_of_macro
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 ::
 
   .. doxygentypedef:: name_of_type
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 ::
 
   .. doxygenenum:: name_of_enumeration
 
-Functions
+函数
 ^^^^^^^^^
 
 ::

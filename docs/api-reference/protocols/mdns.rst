@@ -1,7 +1,7 @@
 mDNS Service
 ============
 
-Overview
+概述
 --------
 
 mDNS is a multicast UDP service that is used to provide local network service and host discovery.
@@ -160,41 +160,41 @@ Example of using the methods above:
         find_mdns_service("_ipp", "_tcp");
     }
 
-Application Example
+应用程序示例
 -------------------
 
 mDNS server/scanner example: :example:`protocols/mdns`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`mdns/include/mdns.h`
 
-Macros
+宏
 ^^^^^^
 
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: mdns_server_t
 .. doxygentypedef:: mdns_result_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: mdns_result_s
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: mdns_init

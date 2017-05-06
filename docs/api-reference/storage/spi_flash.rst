@@ -7,17 +7,17 @@ See also
 - :doc:`Over The Air Update (OTA) API <../system/ota>` provides high-level API for updating app firmware stored in flash.
 - :doc:`Non-Volatile Storage (NVS) API <nvs_flash>` provides a structured API for storing small items of data in SPI flash.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`spi_flash/include/esp_spi_flash.h`
   * :component_file:`spi_flash/include/esp_partition.h`
   * :component_file:`bootloader_support/include/esp_flash_encrypt.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_ERR_FLASH_BASE
@@ -28,25 +28,25 @@ Macros
 .. doxygendefine:: ESP_PARTITION_SUBTYPE_OTA
 .. doxygendefine:: SPI_FLASH_CACHE2PHYS_FAIL
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: spi_flash_mmap_handle_t
 .. doxygentypedef:: esp_partition_iterator_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: spi_flash_mmap_memory_t
 .. doxygenenum:: esp_partition_type_t
 .. doxygenenum:: esp_partition_subtype_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_partition_t
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: spi_flash_init

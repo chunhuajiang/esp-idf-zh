@@ -1,31 +1,31 @@
 RMT
 ========
 
-Overview
+概述
 --------
 
 The RMT (Remote Control) module driver can be used to send and receive infrared remote control signals. Due to flexibility of RMT module, the driver can also be used to generate many other types of signals.
 
-Application Example
+应用程序示例
 -------------------
 
 NEC remote control TX and RX example: :example:`peripherals/rmt_nec_tx_rx`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/rmt.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: RMT_MEM_BLOCK_BYTE_NUM
 .. doxygendefine:: RMT_MEM_ITEM_NUM
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: rmt_channel_t
@@ -36,7 +36,7 @@ Enumerations
 .. doxygenenum:: rmt_idle_level_t
 .. doxygenenum:: rmt_carrier_level_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: rmt_tx_config_t
@@ -49,7 +49,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: rmt_set_clk_div

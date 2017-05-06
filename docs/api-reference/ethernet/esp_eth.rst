@@ -1,15 +1,15 @@
 ETHERNET
 ========
 
-Application Example
+应用程序示例
 -------------------
 
 Ethernet example: :example:`ethernet/ethernet`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`ethernet/include/esp_eth.h`
@@ -25,7 +25,7 @@ Headers include a default configuration structure. These default configurations 
   * :component_file:`ethernet/include/phy/phy_tlk110.h`
   * :component_file:`ethernet/include/phy/phy_lan8720.h`
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: eth_phy_check_link_func
@@ -37,7 +37,7 @@ Type Definitions
 .. doxygentypedef:: eth_gpio_config_func
 .. doxygentypedef:: eth_phy_get_partner_pause_enable_func
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: eth_mode_t
@@ -45,14 +45,14 @@ Enumerations
 .. doxygenenum:: eth_duplex_mode_t
 .. doxygenenum:: eth_phy_base_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: eth_config_t
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_eth_init

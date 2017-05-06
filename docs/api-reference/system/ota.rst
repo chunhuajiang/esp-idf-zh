@@ -1,7 +1,7 @@
 Over The Air Updates (OTA)
 ==========================
 
-OTA Process Overview
+OTA Process 概述
 ^^^^^^^^^^^^^^^^^^^^
 
 The OTA update mechanism allows a device to update itself based on data received while the normal firmware is running
@@ -38,20 +38,20 @@ See also
 * :doc:`Partition Table documentation <../../api-guides/partition-tables>`
 * :doc:`Lower-Level SPI Flash/Partition API <../storage/spi_flash>`
 
-Application Example
+应用程序示例
 -------------------
 
 End-to-end example of OTA firmware update workflow: :example:`system/ota`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`app_update/include/esp_ota_ops.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_ERR_OTA_BASE
@@ -60,12 +60,12 @@ Macros
 .. doxygendefine:: ESP_ERR_OTA_VALIDATE_FAILED
 .. doxygendefine:: OTA_SIZE_UNKNOWN
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_ota_handle_t
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_ota_begin

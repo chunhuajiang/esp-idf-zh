@@ -1,47 +1,47 @@
 Sigma-delta Modulation
 ======================
 
-Overview
+概述
 --------
 
 ESP32 has a second-order sigma-delta modulation module.
 This driver configures the channels of the sigma-delta module.
 
-Application Example
+应用程序示例
 -------------------
 
 Sigma-delta Modulation example: :example:`peripherals/sigmadelta`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/sigmadelta.h`
 
 
-Macros
+宏
 ^^^^^^
 
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: sigmadelta_channel_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: sigmadelta_config_t
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: sigmadelta_config

@@ -1,7 +1,7 @@
 SPI Slave driver
 =================
 
-Overview
+概述
 --------
 
 The ESP32 has four SPI peripheral devices, called SPI0, SPI1, HSPI and VSPI. SPI0 is entirely dedicated to
@@ -84,20 +84,20 @@ of the transmission queues in the slave driver, in bytes, is not both larger tha
 four, the SPI hardware can fail to write the last one to seven bytes to the receive buffer.
 
 
-Application Example
+应用程序示例
 -------------------
 
 Slave/master communication: :example:`peripherals/spi_slave`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/spi_slave.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: SPI_SLAVE_TXBIT_LSBFIRST
@@ -107,15 +107,15 @@ Macros
 
 
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: spi_host_device_t
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: spi_slave_transaction_t
@@ -131,7 +131,7 @@ Be advised that the slave driver does not use the quadwp/quadhd lines and fields
 will be ignored and can thus safely be left uninitialized.
 
 
-Functions
+函数
 ---------
 
 .. doxygenfunction:: spi_slave_initialize

@@ -1,34 +1,34 @@
 Pulse Counter
 =============
 
-Overview
+概述
 --------
 
 The PCNT (Pulse Counter) module is designed to count the number of rising and/or falling edges of an input signal. Each pulse counter unit has a 16-bit signed counter register and two channels that can be configured to either increment or decrement the counter. Each channel has a signal input that accepts signal edges to be detected, as well as a control input that can be used to enable or disable the signal input. The inputs have optional filters that can be used to discard unwanted glitches in the signal.
 
-Application Example
+应用程序示例
 -------------------
 
 Pulse counter with control signal and event interrupt example: :example:`peripherals/pcnt`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/pcnt.h`
 
 
-Macros
+宏
 ^^^^^^
 
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: pcnt_ctrl_mode_t
@@ -37,12 +37,12 @@ Enumerations
 .. doxygenenum:: pcnt_channel_t
 .. doxygenenum:: pcnt_evt_type_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: pcnt_config_t
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: pcnt_unit_config

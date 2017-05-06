@@ -1,7 +1,7 @@
 Memory allocation
 ====================
 
-Overview
+概述
 --------
 
 The ESP32 has multiple types of RAM. Internally, there's IRAM, DRAM as well as RAM that can be used as both. It's also
@@ -31,17 +31,17 @@ useful to allocate it with the MALLOC_CAP_32BIT flag. This also allows the alloc
 which it can't do for a normal malloc() call. This can help to use all the available memory in the ESP32.
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`esp32/include/esp_heap_alloc_caps.h`
   * :component_file:`freertos/include/freertos/heap_regions.h`
 
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: MALLOC_CAP_EXEC
@@ -57,13 +57,13 @@ Macros
 .. doxygendefine:: MALLOC_CAP_SPISRAM
 .. doxygendefine:: MALLOC_CAP_INVALID
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: HeapRegionTagged_t
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: heap_alloc_caps_init

@@ -1,35 +1,35 @@
 .. include:: ../../../components/vfs/README.rst
 
-Application Example
+应用程序示例
 -------------------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`vfs/include/esp_vfs.h`
   * :component_file:`vfs/include/esp_vfs_dev.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_VFS_PATH_MAX
 .. doxygendefine:: ESP_VFS_FLAG_DEFAULT
 .. doxygendefine:: ESP_VFS_FLAG_CONTEXT_PTR
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_vfs_t
    :members:
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_vfs_register

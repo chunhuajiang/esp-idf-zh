@@ -1,27 +1,27 @@
 UART
 ====
 
-Overview
+概述
 --------
 
 `Instructions`_
 
 .. _Instructions: ../template.html
 
-Application Example
+应用程序示例
 -------------------
 
 Configure uart settings and install uart driver to read/write using UART0 and UART1 interfaces: :example:`peripherals/uart`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/uart.h`
 
-Data Structures
+Data 结构体
 ^^^^^^^^^^^^^^^
 
 .. doxygenstruct:: uart_config_t
@@ -33,7 +33,7 @@ Data Structures
 .. doxygenstruct:: uart_event_t
    :members:
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: UART_FIFO_LEN
@@ -47,7 +47,7 @@ Macros
 .. doxygendefine:: UART_INVERSE_TXD
 .. doxygendefine:: UART_INVERSE_RTS
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: uart_word_length_t
@@ -57,7 +57,7 @@ Enumerations
 .. doxygenenum:: uart_hw_flowcontrol_t
 .. doxygenenum:: uart_event_type_t
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: uart_set_word_length

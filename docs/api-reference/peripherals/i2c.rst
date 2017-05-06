@@ -1,36 +1,36 @@
 I2C
 ===========
 
-Overview
+概述
 --------
 
 ESP32 has two I2C controllers which can be set as master mode or slave mode.
 
-Application Example
+应用程序示例
 -------------------
 
 I2C master and slave example: :example:`peripherals/i2c`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/i2c.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: I2C_APB_CLK_FREQ
 .. doxygendefine:: I2C_FIFO_LEN
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: i2c_cmd_handle_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: i2c_mode_t
@@ -40,14 +40,14 @@ Enumerations
 .. doxygenenum:: i2c_port_t
 .. doxygenenum:: i2c_addr_mode_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: i2c_config_t
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: i2c_driver_install

@@ -1,7 +1,7 @@
 SDMMC Host Peripheral
 =====================
 
-Overview
+概述
 --------
 
 SDMMC peripheral supports SD and MMC memory cards and SDIO cards. SDMMC software builds on top of SDMMC driver and consists of the following parts:
@@ -12,7 +12,7 @@ SDMMC peripheral supports SD and MMC memory cards and SDIO cards. SDMMC software
 
 Protocol layer works with the host via ``sdmmc_host_t`` structure. This structure contains pointers to various functions of the host. This design makes it possible to implement an SD host using SPI interface later.
 
-Application Example
+应用程序示例
 -------------------
 
 An example which combines SDMMC driver with FATFS library is provided in ``examples/storage/sd_card`` directory. This example initializes the card, writes and reads data from it using POSIX and C library APIs. See README.md file in the example directory for more information.

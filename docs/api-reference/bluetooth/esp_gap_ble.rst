@@ -26,7 +26,7 @@ API 参考手册
   * :component_file:`bt/bluedroid/api/include/esp_gap_ble_api.h`
 
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_BLE_ADV_FLAG_LIMIT_DISC
@@ -59,7 +59,7 @@ Macros
 .. doxygendefine:: ESP_BLE_ADV_DATA_LEN_MAX
 .. doxygendefine:: ESP_BLE_SCAN_RSP_DATA_LEN_MAX
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_ble_key_type_t
@@ -67,7 +67,7 @@ Type Definitions
 .. doxygentypedef:: esp_ble_io_cap_t
 .. doxygentypedef:: esp_gap_ble_cb_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_gap_ble_cb_event_t
@@ -83,7 +83,7 @@ Enumerations
 .. doxygenenum:: esp_gap_search_evt_t
 .. doxygenenum:: esp_ble_evt_type_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_ble_adv_params_t
@@ -162,7 +162,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_ble_gap_register_callback

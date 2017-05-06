@@ -1,7 +1,7 @@
 SPI Master driver
 =================
 
-Overview
+概述
 --------
 
 The ESP32 has four SPI peripheral devices, called SPI0, SPI1, HSPI and VSPI. SPI0 is entirely dedicated to
@@ -104,20 +104,20 @@ on the transmission. For received data, use ``rx_data`` and set ``SPI_USE_RXDATA
 not touch the ``tx_buffer`` or ``rx_buffer`` members, because they use the same memory locations
 as ``tx_data`` and ``rx_data``.
 
-Application Example
+应用程序示例
 -------------------
  
 Display graphics on the ILI9341-based 320x240 LCD: :example:`peripherals/spi_master`.
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`driver/include/driver/spi_master.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: SPI_DEVICE_TXBIT_LSBFIRST
@@ -134,17 +134,17 @@ Macros
 .. doxygendefine:: SPI_TRANS_USE_RXDATA
 .. doxygendefine:: SPI_TRANS_USE_TXDATA
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: spi_device_handle_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: spi_host_device_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: spi_transaction_t
@@ -158,7 +158,7 @@ Structures
 
 
 
-Functions
+函数
 ---------
 
 .. doxygenfunction:: spi_bus_initialize

@@ -1,6 +1,6 @@
 .. include:: ../../../components/log/README.rst
 
-Application Example
+应用程序示例
 -------------------
 
 Log library is commonly used by most of esp-idf components and examples. For demonstration of log functionality check :idf:`examples` folder of `espressif/esp-idf <https://github.com/espressif/esp-idf>`_ repository, that among others, contains the following examples:
@@ -9,15 +9,15 @@ Log library is commonly used by most of esp-idf components and examples. For dem
 * :example:`storage/sd_card` 
 * :example:`protocols/https_request` 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`log/include/esp_log.h`
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: LOG_COLOR_E
@@ -39,17 +39,17 @@ Macros
 .. doxygendefine:: ESP_LOGD
 .. doxygendefine:: ESP_LOGV
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: vprintf_like_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_log_level_t
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_log_level_set

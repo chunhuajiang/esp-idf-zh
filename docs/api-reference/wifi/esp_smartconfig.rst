@@ -1,20 +1,20 @@
 Smart Config
 ============
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`esp32/include/esp_smartconfig.h`
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: sc_callback_t
 
-Functions
+函数
 ^^^^^^^^^
 
 .. doxygenfunction:: esp_smartconfig_get_version

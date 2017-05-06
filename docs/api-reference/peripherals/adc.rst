@@ -1,7 +1,7 @@
 Analog to Digital Converter
 ===========================
 
-Overview
+概述
 --------
 
 ESP32 integrates two 12-bit SAR ("Successive Approximation Register") ADCs (Analog to Digital Converters) and supports measurements on 18 channels (analog enabled pins). Some of these pins can be used to build a programmable gain amplifier which is used for the measurement of small
@@ -13,7 +13,7 @@ Taking an ADC reading involves configuring the ADC with the desired precision an
 
 It is also possible to read the internal hall effect sensor via ADC1.
 
-Application Example
+应用程序示例
 -------------------
 
 Reading voltage on ADC1 channel 0 (GPIO 36)::
@@ -37,22 +37,22 @@ Reading the internal hall effect sensor::
 
 The value read in both these examples is 12 bits wide (range 0-4095).
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * `components/driver/include/driver/adc.h`
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
   .. doxygenenum:: adc1_channel_t
   .. doxygenenum:: adc_atten_t
   .. doxygenenum:: adc_bits_width_t
 
-Functions
+函数
 ^^^^^^^^^
 
   .. doxygenfunction:: adc1_config_width

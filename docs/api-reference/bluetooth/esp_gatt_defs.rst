@@ -1,12 +1,12 @@
 GATT DEFINES
 ============
 
-Overview
+概述
 --------
 
 `Instructions`_
 
-Application Example
+应用程序示例
 -------------------
 
 `Instructions`_
@@ -14,16 +14,16 @@ Application Example
 .. _Instructions: ../template.html
 
 
-API Reference
+API 参考手册
 -------------
 
-Header Files
+头文件
 ^^^^^^^^^^^^
 
   * :component_file:`bt/bluedroid/api/include/esp_gatt_defs.h`
 
 
-Macros
+宏
 ^^^^^^
 
 .. doxygendefine:: ESP_GATT_UUID_IMMEDIATE_ALERT_SVC
@@ -117,12 +117,12 @@ Macros
 .. doxygendefine:: ESP_GATT_AUTO_RSP
 .. doxygendefine:: ESP_GATT_IF_NONE
 
-Type Definitions
+类型定义
 ^^^^^^^^^^^^^^^^
 
 .. doxygentypedef:: esp_gatt_if_t
 
-Enumerations
+枚举
 ^^^^^^^^^^^^
 
 .. doxygenenum:: esp_gatt_prep_write_type
@@ -133,7 +133,7 @@ Enumerations
 .. doxygenenum:: esp_gatt_char_prop_t
 .. doxygenenum:: esp_gatt_write_type_t
 
-Structures
+结构体
 ^^^^^^^^^^
 
 .. doxygenstruct:: esp_attr_desc_t
@@ -161,7 +161,7 @@ Structures
     :members:
 
 
-Functions
+函数
 ^^^^^^^^^
 
 
