@@ -1,19 +1,20 @@
-Virtual filesystem component
+虚拟文件系统(VFS)组件
 ============================
 
-Overview
+概述
 --------
 
-Virtual filesystem (VFS) component provides a unified interface for drivers which can perform operations on file-like objects. This can be a real filesystems (FAT, SPIFFS, etc.), or device drivers which exposes file-like interface.
+虚拟文件系统（VFS）组件为驱动程序提供了统一的接口，可以执行类似文件对象的操作。这既可以是一个真实文件系统（FAT、SPIFFS 等），也可以是暴露了类似文件接口的设备驱动程序。
 
-This component allows C library functions, such as fopen and fprintf, to work with FS drivers. At high level, each FS driver is associated with some path prefix. When one of C library functions needs to open a file, VFS component searches for the FS driver associated with the file's path, and forwards the call to that driver. VFS also forwards read, write, and other calls for the given file to the same FS driver.
+该组件允许 C 库函数（例如 fopen、fprintf）与文件系统驱动程序一起工作。在顶层，每个文件系统驱动程序都关联了某些路径前缀。当某个 C 库函数需要打开文件时，VFS 组件会查找与文件的路径相关的文件系统驱动，然后将调用转给那个驱动。
 
-For example, one can register a FAT filesystem driver with ``/fat`` prefix, and call ``fopen("/fat/file.txt", "w")``. VFS component will then call ``open`` function of FAT driver and pass ``/file.txt`` argument to it (and appropriate mode flags). All subsequent calls to C library functions for the returned ``FILE*`` stream will also be forwarded to the FAT driver.
 
-FS registration
+例如，你可以通过前缀 ``/fat`` 注册一个 FAT 文件系统，然后调用 ``fopen("/fat/file.txt", "w")``。VFS 组件将会调用 FAT 驱动 ``open`` 函数，并将参数 ``/file.txt`` （以及一些 mode 标志）传递给它。随后对返回的 ``FILE*`` 文件流进行调用的 C 库函数也会被转给 FAT 驱动。
+
+FS 注册
 ---------------
 
-To register an FS driver, application needs to define in instance of esp_vfs_t structure and populate it with function pointers to FS APIs::
+要注册一个 FS 驱动，应用程序需要定义一个 esp_vfs_t 结构体的实例，并初始化它里面的函数指针 ::
 
     esp_vfs_t myfs = {
         .fd_offset = 0,
@@ -27,9 +28,9 @@ To register an FS driver, application needs to define in instance of esp_vfs_t s
 
     ESP_ERROR_CHECK(esp_vfs_register("/data", &myfs, NULL));
 
-Depending on the way FS driver declares its APIs, either ``read``, ``write``, etc., or ``read_p``, ``write_p``, etc. should be used.
+你可以使用的 API 依赖于 FS 驱动程序申明 API 的方式，例如 ``read``, ``write``, 等, 或 ``read_p``, ``write_p``等。
 
-Case 1: API functions are declared without an extra context pointer (FS driver is a singleton)::
+情形 1: API 函数定义时没有额外的上下文指针 (FS driver is a singleton)::
 
     size_t myfs_write(int fd, const void * data, size_t size);
 
@@ -38,10 +39,10 @@ Case 1: API functions are declared without an extra context pointer (FS driver i
         .write = &myfs_write,
     // ... other members initialized
     
-    // When registering FS, context pointer (third argument) is NULL:
+    // 当注册 FS 时，上下文指针(第三个参数)是 NULL:
     ESP_ERROR_CHECK(esp_vfs_register("/data", &myfs, NULL));
 
-Case 2: API functions are declared with an extra context pointer (FS driver supports multiple instances)::
+情形 2: API 函数定义时有额外的上下文指针 (FS 驱动支持多个实例)::
 
     size_t myfs_write(myfs_t* fs, int fd, const void * data, size_t size);
 
@@ -50,42 +51,42 @@ Case 2: API functions are declared with an extra context pointer (FS driver supp
         .write_p = &myfs_write,
     // ... other members initialized
     
-    // When registering FS, pass the FS context pointer into the third argument
+    // 当注册 FS 时，FS 上下文指针传递给了第三个参数
     // (hypothetical myfs_mount function is used for illustrative purposes)
     myfs_t* myfs_inst1 = myfs_mount(partition1->offset, partition1->size);
     ESP_ERROR_CHECK(esp_vfs_register("/data1", &myfs, myfs_inst1));
 
-    // Can register another instance:
+    // 可以注册另外的实例
     myfs_t* myfs_inst2 = myfs_mount(partition2->offset, partition2->size);
     ESP_ERROR_CHECK(esp_vfs_register("/data2", &myfs, myfs_inst2));
 
-Paths
+路径
 -----
 
-Each registered FS has a path prefix associated with it. This prefix may be considered a "mount point" of this partition.
+每个注册的 FS 都有一个相关的前缀。这个前缀可以被看成是一个该分区的“挂载点”。
 
-Registering mount points which have another mount point as a prefix is not supported and results in undefined behavior. For instance, the following is correct and supported:
+在已有的挂载点上注册另一个挂载点是不被支持的，其结果是未定义的。例如，下面是正确、支持的：
 
 - FS 1 on /data/fs1
 - FS 2 on /data/fs2
 
-This **will not work** as expected:
+下面这种方法 **不会正确工作**：
 
 - FS 1 on /data
 - FS 2 on /data/fs2
 
-When opening files, FS driver will only be given relative path to files. For example:
+打开文件时，FS 驱动只会收到文件的相对路径，例如：
 
-- ``myfs`` driver is registered with ``/data`` as path prefix
-- and application calls ``fopen("/data/config.json", ...)``
-- then VFS component will call ``myfs_open("/config.json", ...)``.
-- ``myfs`` driver will open ``/config.json`` file
+- ``myfs`` 注册时的路径前缀是 ``/data``
+- 应用程序调用 ``fopen("/data/config.json", ...)``
+- 然后 VFS 组件将调用 ``myfs_open("/config.json", ...)``
+- ``myfs`` 驱动将打开文件 ``/config.json``
 
-VFS doesn't impose a limit on total file path length, but it does limit FS path prefix to ``ESP_VFS_PATH_MAX`` characters. Individual FS drivers may have their own filename length limitations.
+VFS 不会限制文件路径的总长度，但是会限制文件路径前缀的长度，即最多为 ``ESP_VFS_PATH_MAX`` 个字符。另外，FS 驱动可能自己会对文件名长度有限制。
 
-
-File descriptors
+文件描述符
 ----------------
+
 
 It is suggested that filesystem drivers should use small positive integers as file descriptors. VFS component assumes that ``CONFIG_MAX_FD_BITS`` bits (12 by default) are sufficient to represent a file descriptor.
 
@@ -120,7 +121,7 @@ When VFS component receives a call from newlib which has a file descriptor, this
                                    +-------------+
 
 
-Standard IO streams (stdin, stdout, stderr)
+标准 IO 流 (stdin, stdout, stderr)
 -------------------------------------------
 
 If "UART for console output" menuconfig option is not set to "None", then ``stdin``, ``stdout``, and ``stderr`` are configured to read from, and write to, a UART. It is possible to use UART0 or UART1 for standard IO. By default, UART0 is used, with 115200 baud rate, TX pin is GPIO1 and RX pin is GPIO3. These parameters can be changed in menuconfig.
@@ -129,7 +130,7 @@ Writing to ``stdout`` or ``stderr`` will send characters to the UART transmit FI
 
 Note that while writing to ``stdout`` or ``stderr`` will block until all characters are put into the FIFO, reading from ``stdin`` is non-blocking. The function which reads from UART will get all the characters present in the FIFO (if any), and return. I.e. doing ``fscanf("%d\n", &var);`` may not have desired results. This is a temporary limitation which will be removed once ``fcntl`` is added to the VFS interface.
 
-Standard streams and FreeRTOS tasks
+标准流和 FreeRTOS 任务
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``FILE`` objects for ``stdin``, ``stdout``, and ``stderr`` are shared between all FreeRTOS tasks, but the pointers to these objects are are stored in per-task ``struct _reent``. The following code::

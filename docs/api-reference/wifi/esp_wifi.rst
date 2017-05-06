@@ -11,7 +11,7 @@ Wi-Fi
 应用程序示例
 -------------------
 
-Simple code showing how to connect ESP32 module to an Access Point: `esp-idf-template <https://github.com/espressif/esp-idf-template>`_.
+示例代码 `esp-idf-template <https://github.com/espressif/esp-idf-template>`_ 展示了如何将 ESP32 模块连接到 AP。
 
 API 参考手册
 -------------

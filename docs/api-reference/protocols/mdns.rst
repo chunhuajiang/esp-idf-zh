@@ -1,20 +1,20 @@
-mDNS Service
+mDNS 服务
 ============
 
 概述
 --------
 
-mDNS is a multicast UDP service that is used to provide local network service and host discovery.
+mDNS 是一个多播 UDP 服务，它用于提供本地网络服务和发现主机。
 
-mDNS is installed by default on most operating systems or is available as separate package. On ``Mac OS`` it is installed by default and is called ``Bonjour``. Apple releases an installer for ``Windows`` that can be found `on Apple's support page <https://support.apple.com/downloads/bonjour%2520for%2520windows>`_. On ``Linux``, mDNS is provided by `avahi <https://github.com/lathiat/avahi>`_ and is usually installed by default.
+mDNS 在大多数操作系统中都已默认安装，或者可以用于独立的软件包。在 ``Mac OS`` 上面，它默认已被安装，且被叫做 ``Bonjour``。苹果发布了一个 ``Windows`` 的安装器，可以在 `on Apple's support page <https://support.apple.com/downloads/bonjour%2520for%2520windows>`_ 上面找到。在 ``Linux`` 上，mDNS 由 `avahi <https://github.com/lathiat/avahi>`_ 提供，且通常都已默认安装。
 
-mDNS Properties
+mDNS 属性
 ^^^^^^^^^^^^^^^
 
-    * ``hostname``: the hostname that the device will respond to. If not set, the ``hostname`` will be read from the interface. Example: ``my-esp32`` will resolve to ``my-esp32.local``
-    * ``default_instance``: friendly name for your device, like ``Jhon's ESP32 Thing``. If not set, ``hostname`` will be used.
+    * ``主机名（hostname）``: 设备将要相应的主机名。如果没设置，``主机名`` 将会从接口中读取。例如: ``my-esp32`` 会被解析为 ``my-esp32.local``。
+    * ``默认实例（default_instance）``: 设备的友好名字，例如 ``Jhon's ESP32 Thing``。如果未被设置，默认使用 ``主机名``。
 
-Example method to start mDNS for the STA interface and set ``hostname`` and ``default_instance``:
+为 STA 接口启动 mDNS 并设置 ``hostname`` 和 ``default_instance`` 的示例：
 
   ::
 
@@ -35,18 +35,18 @@ Example method to start mDNS for the STA interface and set ``hostname`` and ``de
         mdns_set_instance(mdns, "Jhon's ESP32 Thing");
     }
 
-mDNS Services
+mDNS 服务
 ^^^^^^^^^^^^^
 
-mDNS can advertise information about network services that your device offers. Each service is defined by a few properties.
+mDNS 可以广播你的设备所提供给的网络服务。每个服务通过一些属性定义。
 
-    * ``service``: (required) service type, prepended with underscore. Some common types can be found `here <http://www.dns-sd.org/serviceTypes.html>`_.
-    * ``proto``: (required) protocol that the service runs on, prepended with underscore. Example: ``_tcp`` or ``_udp`` 
-    * ``port``: (required) network port that the service runs on
-    * ``instance``: friendly name for your service, like ``Jhon's ESP32 Web Server``. If not defined, ``default_instance`` will be used.
-    * ``txt``: ``var=val`` array of strings, used to define properties for your service
+    * ``服务（service）``: 所需的服务类型，使用下划线作为前缀。一些通过类型可以在 `这里 <http://www.dns-sd.org/serviceTypes.html>`_ 找到。
+    * ``协议（proto）``: 服务运行所需的协议，以下划线作为前缀，例如： ``_tcp`` 或者 ``_udp`` 。
+    * ``端口（port）``: 服务运行所需的端口。
+    * ``实例（instance）``: 服务的友好名字，例如 ``Jhon's ESP32 Web Server``。如果未定义，则使用 ``默认实例``。
+    * ``文本（txt）``: ``var=val`` 类型的字符串数组，用于为你的服务定义属性。
 
-Example method to add a few services and different properties:
+添加服务和不同属性的示例：
 
   ::
 
@@ -74,15 +74,14 @@ Example method to add a few services and different properties:
         mdns_service_port_set(mdns, "_myservice", "_udp", 4321);
     }
 
-mDNS Query
+mDNS 查询
 ^^^^^^^^^^
 
-mDNS provides methods for browsing for services and resolving host's IP/IPv6 addresses.
-    Results are returned as a linked list of ``mdns_result_t`` objects. If the result is from host query, 
-    it will contain only ``addr`` and ``addrv6`` if found. Service queries will populate all fields 
-    in a result that were found.
-
-Example method to resolve host IPs:
+mDNS 提供了浏览服务和解析主机 IP/IPv6 地址的方法。
+    
+    结果用过一个链表对象 ``mdns_result_t`` 返回。如果结果是来自主机查询，则只包含 ``addr`` 和 ``addrv6``（如果找到）。服务查询将存在于所找到的结构的所有字段。
+    
+解析主机 IP 的示例：
 
   ::
 
@@ -110,7 +109,7 @@ Example method to resolve host IPs:
         }
     }
 
-Example method to resolve local services:
+解析本地服务的示例：
 
   ::
 
@@ -140,7 +139,7 @@ Example method to resolve local services:
         }
     }
 
-Example of using the methods above:
+使用上面的方法的示例：
 
   ::
 
@@ -163,7 +162,7 @@ Example of using the methods above:
 应用程序示例
 -------------------
 
-mDNS server/scanner example: :example:`protocols/mdns`.
+mDNS 的服务器/扫描示例程序： :example:`protocols/mdns`.
 
 API 参考手册
 -------------

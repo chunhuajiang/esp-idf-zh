@@ -1,4 +1,4 @@
-Peripherals API
+外设 API
 ***************
 
 .. toctree::
@@ -6,17 +6,17 @@ Peripherals API
 
    ADC <adc>
    DAC <dac>
-   GPIO (including RTC low power I/O) <gpio>
+   GPIO (包括 RTC 底层 I/O) <gpio>
    I2C <i2c>
    I2S <i2s>
-   LED Control <ledc>
-   Pulse Counter <pcnt>
+   LED 的控制 <ledc>
+   脉冲计数器 <pcnt>
    SD/MMC Card Host <../storage/sdmmc>
    Sigma-delta Modulation <sigmadelta>
    SPI Master <spi_master>
    SPI Slave <spi_slave>
-   Remote Control <rmt>
-   Timer <timer>
+   远程控制 <rmt>
+   定时器 <timer>
    UART <uart>
 
-Example code for this API section is provided in :example:`peripherals` directory of ESP-IDF examples.
+关于本节 API 的示例代码请参考 ESP-IDF 示例中的 :example:`peripherals` 目录。

@@ -1,11 +1,11 @@
-FAT Filesystem Support
+FAT 文件系统的支持
 ======================
 
-ESP-IDF uses `FatFs <http://elm-chan.org/fsw/ff/00index_e.html>`_ library to work with FAT filesystems. FatFs library resides in ``fatfs`` component. Although it can be used directly, many of its features can be accessed via VFS using C standard library and POSIX APIs.
+ESP-IDF 使用 `FatFs <http://elm-chan.org/fsw/ff/00index_e.html>`_ 库作为 FAT 文件系统。FatFs 库位于 ``fatfs`` 组件内。尽管它可以被直接访问，它的许多功能都可以通过 VFS 访问，即使用标准 C 库和 POSIX API。
 
-Additionally, FatFs has been modified to support run-time pluggable disk IO layer. This allows mapping of FatFs drives to physical disks at run-time.
+此外，FatFs 已被修改，支持运行时可插拔磁盘 IO 层。这能让 FatFs 在运行时映射为物理磁盘。
 
-Using FatFs with VFS
+FatFs with VFS
 --------------------
 
 ``esp_vfs_fat.h`` header file defines functions to connect FatFs with VFS. ``esp_vfs_fat_register`` function allocates a ``FATFS`` structure, and registers a given path prefix in VFS. Subsequent operations on files starting with this prefix are forwarded to FatFs APIs. ``esp_vfs_fat_unregister_path`` function deletes the registration with VFS, and frees the ``FATFS`` structure.

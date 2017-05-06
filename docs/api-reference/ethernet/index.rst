@@ -1,10 +1,9 @@
-Ethernet API
+以太网 API
 ************
 
 .. toctree::
    :maxdepth: 1
 
-   Ethernet <esp_eth>
+   以太网 <esp_eth>
 
-
-Example code for this API section is provided in :example:`ethernet` directory of ESP-IDF examples.
+关于本节 API 的示例代码请参考 ESP-IDF 示例中的 :example:`ethernet` 目录。

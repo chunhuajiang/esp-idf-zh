@@ -1,10 +1,10 @@
-ETHERNET
+以太网
 ========
 
 应用程序示例
 -------------------
 
-Ethernet example: :example:`ethernet/ethernet`.
+以太网示例 :example:`ethernet/ethernet`.
 
 API 参考手册
 -------------
@@ -15,12 +15,12 @@ API 参考手册
   * :component_file:`ethernet/include/esp_eth.h`
     * :component_file:`ethernet/include/phy/phy.h`
 
-PHY Interfaces
+PHY 接口
 ^^^^^^^^^^^^^^
 
-The configured PHY model(s) are set in software by configuring the eth_config_t structure for the given PHY.
+PHY 模块通过配置所给 PHY 的结构体 eth_config_t 进行配置。
 
-Headers include a default configuration structure. These default configurations will need some members overriden or re-set before they can be used for a particular PHY hardware configuration. Consult the Ethernet example to see how this is done.
+头部包含一个默认的配置结构体。这些默认配置中的某些成员在被用于一个特殊的 PHY 硬件配置之前需要被覆盖或重置。查看以太网的示例代码可以了解这是如何完成的。
 
   * :component_file:`ethernet/include/phy/phy_tlk110.h`
   * :component_file:`ethernet/include/phy/phy_lan8720.h`
@@ -67,7 +67,7 @@ Headers include a default configuration structure. These default configurations 
 .. doxygenfunction:: esp_eth_free_rx_buf
 
 
-PHY Configuration Constants
+PHY 配置常量
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. doxygenvariable:: phy_tlk110_default_ethernet_config

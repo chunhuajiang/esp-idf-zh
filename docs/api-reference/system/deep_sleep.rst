@@ -4,7 +4,7 @@
 概述
 --------
 
-ESP32 具有深度睡眠节电功能。在这种模式下，CPU、大多数的 RAM 和所有的由时钟 APB_CLK 驱动的数字外设都会被断电。芯片中还继续处于供电状态的部分包括：RTC 控制器、RTC 外设（包括 ULP 协处理器）、RTC 内存（慢速和快速）。
+ESP32 具有深度睡眠节电功能。在这种模式下，CPU、大多数的 RAM 和所有的由时钟 APB_CLK 驱动的数字外设都会被断电。芯片中还继续处于供电状态的部分包括：RTC 控制器、RTC 外设（包括 ULP 协处理器）、RTC 内存（低速和快速）。
 
 从深度睡眠中唤醒可以使用几种源。这些源可以组合在一起，此时，任何一种源都可以触发唤醒。可以通过 API ``esp_deep_sleep_enable_X_wakeup`` 来使能唤醒源。下一节将描述这些 API 的细节。你可以在系统进入深度睡眠前的任何时刻配置唤醒源。
 
@@ -18,20 +18,20 @@ ESP32 具有深度睡眠节电功能。在这种模式下，CPU、大多数的 R
 定时器
 ^^^^^^^^
 
-RTC controller has a built in timer which can be used to wake up the chip after a predefined amount of time. Time is specified at microsecond precision, but the actual resolution depends on the clock source selected for RTC SLOW_CLK. See chapter "Reset and Clock" of the ESP32 Technical Reference Manual for details about RTC clock options. 
+RTC 控制器中有一个内置的定时器，可用于在预定义的时间到达后唤醒芯片。时间的精度是微秒，但是实际的分辨率依赖于为 RTC SLOW_CLK 所选择的时钟源。关于 RTC 时钟选项的更多细节请参考 ESP32 技术参考手册的 "Reset and Clock" 一章。
 
-This wakeup mode doesn't require RTC peripherals or RTC memories to be powered on during deep sleep.
+这种唤醒模式不需要 RTC 外设或内存在深度睡眠器件供电。
 
-The following function can be used to enable deep sleep wakeup using a timer.
+下面的函数可以用于使能使用定时器深度睡眠唤醒。
 
 .. doxygenfunction:: esp_deep_sleep_enable_timer_wakeup
 
 触摸板
 ^^^^^^^^^
 
-RTC IO module contains logic to trigger wakeup when a touch sensor interrupt occurs. You need to configure the touch pad interrupt before the chip starts deep sleep.
+RTC IO 模块中包含这样一个逻辑：当发生触摸传感器中断时触发唤醒。你需要在芯片进入深度睡眠前配置触摸屏的中断。
 
-Revisions 0 and 1 of the ESP32 only support this wakeup mode when RTC peripherals are not forced to be powered on (i.e. ESP_PD_DOMAIN_RTC_PERIPH should be set to ESP_PD_OPTION_AUTO).
+ESP32 的修订版 0 和 1 仅在 RTC 外设没有被强制供电时支持该唤醒（即 ESP_PD_DOMAIN_RTC_PERIPH 被设置为 ESP_PD_OPTION_AUTO）。
 
 .. doxygenfunction:: esp_deep_sleep_enable_touchpad_wakeup
 
@@ -39,33 +39,34 @@ Revisions 0 and 1 of the ESP32 only support this wakeup mode when RTC peripheral
 外部唤醒(ext0)
 ^^^^^^^^^^^^^^^^^^^^^^
 
-RTC IO module contains logic to trigger wakeup when one of RTC GPIOs is set to a predefined logic level. RTC IO is part of RTC peripherals power domain, so RTC peripherals will be kept powered on during deep sleep if this wakeup source is requested. 
+RTC IO 模块中包含这样一个逻辑，当某个 RTC GPIO 被设置为预定义的逻辑值时触发唤醒。RTC IO 是 RTC 外设电源域的一部分，因此如果该唤醒源被请求的话，RTC 外设将在深度睡眠期间保持供电。
 
-Because RTC IO module is enabled in this mode, internal pullup or pulldown resistors can also be used. They need to be configured by the application using ``rtc_gpio_pullup_en`` and ``rtc_gpio_pulldown_en`` functions, before calling ``esp_deep_sleep_start``.
+因为 RTC IO 模块在这个模式被使能，因此也可以使用内部上拉或下拉电阻。它们需要应用程序在调用 ``esp_deep_sleep_start`` 前使用先调用函数 ``rtc_gpio_pullup_en`` 或 ``rtc_gpio_pulldown_en``。
 
-In revisions 0 and 1 of the ESP32, this wakeup source is incompatible with ULP and touch wakeup sources.
+在 ESP32 的修订版 0 和 1 中，这个唤醒源与 ULP 和触摸唤醒源都不兼容。
 
-.. warning:: After wake up from deep sleep, IO pad used for wakeup will be configured as RTC IO. Before using this pad as digital GPIO, reconfigure it using ``rtc_gpio_deinit(gpio_num)`` function.
+.. warning:: 从深度睡眠中唤醒后，用于唤醒的 IO Pad 将被配置为 RTC IO，因此在将该 pad 用作数字 IO 前，需要使用函数 ``rtc_gpio_deinit(gpio_num)`` 对它进行重新配置。
 
 .. doxygenfunction:: esp_deep_sleep_enable_ext0_wakeup
 
 外部唤醒(ext1)
 ^^^^^^^^^^^^^^^^^^^^^^
 
-RTC controller contains logic to trigger wakeup using multiple RTC GPIOs. One of the two logic functions can be used to trigger wakeup:
+RTC 控制器包含使用多个 RTC GPIO 触发唤醒的逻辑。下面其中一个逻辑功能可以用于触发唤醒：
 
-    - wake up if any of the selected pins is high (``ESP_EXT1_WAKEUP_ANY_HIGH``)
-    - wake up if all the selected pins are low (``ESP_EXT1_WAKEUP_ALL_LOW``)
+    - 当任意一个所选引脚为高电平时唤醒 (``ESP_EXT1_WAKEUP_ANY_HIGH``)
+    - 当所有所选引脚为低电平时唤醒 (``ESP_EXT1_WAKEUP_ALL_LOW``)
 
-This wakeup source is implemented by the RTC controller. As such, RTC peripherals and RTC memories can be powered off in this mode. However, if RTC peripherals are powered down, internal pullup and pulldown resistors will be disabled. To use internal pullup or pulldown resistors, request RTC peripherals power domain to be kept on during deep sleep, and configure pullup/pulldown resistors using ``rtc_gpio_`` functions, before entering deep sleep::
+这个唤醒源由 RTC 控制器实现。这种模式下的 RTC 外设和 RTC 内存可以被断电。不过，如果 RTC 外设被断电，内部上拉和下拉电阻将被禁止。为了使用内部上拉和下拉电阻，需要 RTC 外设电源域在睡眠期间保持开启，并在进入深度睡眠前使用函数 ``rtc_gpio_`` 配置上拉/下拉电阻 ::
+
 
     esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON);
     gpio_pullup_dis(gpio_num);
     gpio_pulldown_en(gpio_num);
 
-.. warning:: After wake up from deep sleep, IO pad(s) used for wakeup will be configured as RTC IO. Before using these pads as digital GPIOs, reconfigure them using ``rtc_gpio_deinit(gpio_num)`` function.
-    
-The following function can be used to enable this wakeup mode:
+.. warning:: 从深度睡眠中唤醒后，用于唤醒的 IO Pad 将被配置为 RTC IO，因此在将该 pad 用作数字 IO 前，需要使用函数 ``rtc_gpio_deinit(gpio_num)`` 对它进行重新配置。
+
+下列函数可以用于使能这个唤醒模式：    
 
 .. doxygenfunction:: esp_deep_sleep_enable_ext1_wakeup
 
@@ -75,22 +76,22 @@ The following function can be used to enable this wakeup mode:
 ULP 协处理器唤醒
 ^^^^^^^^^^^^^^^^^^^^^^
 
-ULP coprocessor can run while the chip is in deep sleep, and may be used to poll sensors, monitor ADC or touch sensor values, and wake up the chip when a specific event is detected. ULP coprocessor is part of RTC peripherals power domain, and it runs the program stored in RTC slow memeory. RTC slow memory will be powered on during deep sleep if this wakeup mode is requested. RTC peripherals will be automatically powered on before ULP coprocessor starts running the program; once the program stops running, RTC peripherals are automatically powered down again.
+当芯片处于深度睡眠时，ULP 协处理器能够运行，可以用于轮询传感器、监视器 ADC 或者触摸板传感器的值，并在检查到某个特殊事件时唤醒芯片。ULP 协处理器是 RTC 外设电源域的一部分，它运行存储在 RTC 低速内存中的程序。如果请求了这种唤醒模式，则 RTC 低速内存将会在深度睡眠期间保持供电状态。RTC 外设会在 ULP 协处理器开始运行程序前自动上电；一旦程序停止运行，RTC 外设会再次自动断电。
 
-Revisions 0 and 1 of the ESP32 only support this wakeup mode when RTC peripherals are not forced to be powered on (i.e. ESP_PD_DOMAIN_RTC_PERIPH should be set to ESP_PD_OPTION_AUTO).
+ESP32 的修订版 0 和 1 仅在 RTC 外设没有被强制供电时支持该唤醒（即 ESP_PD_DOMAIN_RTC_PERIPH 被设置为 ESP_PD_OPTION_AUTO）。
 
-The following function can be used to enable this wakeup mode:
+下列函数可以用于使能这个唤醒模式：    
 
 .. doxygenfunction:: esp_deep_sleep_enable_ulp_wakeup
 
 RTC 外设和内存断电
 ------------------------------------------
 
-By default, ``esp_deep_sleep_start`` function will power down all RTC power domains which are not needed by the enabled wakeup sources. To override this behaviour, the following function is provided:
+默认情况下，函数 ``esp_deep_sleep_start`` 将会关掉被使能的唤醒源不需要的所有 RTC 电源域。如果向修改这个默认行为，可以使用下面的函数：
 
-Note: in revision 0 of the ESP32, RTC fast memory will always be kept enabled in deep sleep, so that the deep sleep stub can run after reset. This can be overriden, if the application doesn't need clean reset behaviour after deep sleep.
+Note: 在 ESP32 的修订版 1 中，RTC 快速内存在深度睡眠期间将总是保持使能，因此深度睡眠桩（stub）可以在复位后运行。如果应用程序在深度睡眠后不需要清除复位行为，也可以对其进行修改。
 
-If some variables in the program are placed into RTC slow memory (for example, using ``RTC_DATA_ATTR`` attribute), RTC slow memory will be kept powered on by default. This can be overriden using ``esp_deep_sleep_pd_config`` function, if desired.
+如果程序中的某些值被if昂懂啊 RTC 低速内存中（例如，使用 ``RTC_DATA_ATTR`` 属性），RTC 低速内存将默认保持供电。如果有需要，也可以使用函数 ``esp_deep_sleep_pd_config`` 对其进行修改。
 
 .. doxygenfunction:: esp_deep_sleep_pd_config
 .. doxygenenum:: esp_deep_sleep_pd_domain_t
@@ -100,14 +101,14 @@ If some variables in the program are placed into RTC slow memory (for example, u
 进入深度睡眠
 -------------------
 
-The following function can be used to enter deep sleep once wakeup sources are configured. It is also possible to go into deep sleep with no wakeup sources configured, in this case the chip will be in deep sleep mode indefinetly, until external reset is applied.
+唤醒源配置后，下面函数可以用于进入深度睡眠。在没有配置唤醒源时也可以进入深度睡眠，在这种情形下，芯片将确切地处于深度睡眠模式，知道接收到外部复位。
 
 .. doxygenfunction:: esp_deep_sleep_start
 
 检查深度睡眠唤醒原因
 --------------------------------
 
-The following function can be used to check which wakeup source has triggered wakeup from deep sleep mode. For touch pad and ext1 wakeup sources, it is possible to identify pin or touch pad which has caused wakeup.
+下面的函数可用于检测是何种唤醒源在深度睡眠期间被触发了。对于触摸板和 ext1 唤醒源，可以确定造成唤醒的引脚或触摸 pad。
 
 .. doxygenfunction:: esp_deep_sleep_get_wakeup_cause
 .. doxygenenum:: esp_deep_sleep_wakeup_cause_t
@@ -118,6 +119,6 @@ The following function can be used to check which wakeup source has triggered wa
 应用程序示例
 -------------------
  
-Implementation of basic functionality of deep sleep is shown in :example:`protocols/sntp` example, where ESP module is periodically waken up to retrive time from NTP server.
+深度睡眠的基本示例程序是 :example:`protocols/sntp`，它会让 ESP 模块周期性地唤醒，以从 NTP 服务器获取时间。
 
-More extensive example in :example:`system/deep_sleep` illustrates usage of various deep sleep wakeup triggers and ULP coprocessor programming.
+更多扩展示例请参考 :example:`system/deep_sleep`，它描述了各种深度睡眠触发器和 ULP 协处理器编程的方法。

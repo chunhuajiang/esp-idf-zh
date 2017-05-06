@@ -1,11 +1,11 @@
 .. include:: ../../../components/spi_flash/README.rst
 
-See also
+其它
 --------
 
-- :doc:`Partition Table documentation <../../api-guides/partition-tables>`
-- :doc:`Over The Air Update (OTA) API <../system/ota>` provides high-level API for updating app firmware stored in flash.
-- :doc:`Non-Volatile Storage (NVS) API <nvs_flash>` provides a structured API for storing small items of data in SPI flash.
+- :doc:`分区表文档 <../../api-guides/partition-tables>`
+- :doc:`空中升级（OTA）API <../system/ota>` 提供了更新存储在 flash 中的应用程序的顶层 API。
+- :doc:`非易变存储器(NVS) API <nvs_flash>` 提供了在 SPI flash 中存储小数据项的结构化 API。
 
 API 参考手册
 -------------
@@ -76,16 +76,12 @@ API 参考手册
 
 .. _spi-flash-implementation-details:
 
-Implementation details
+实现细节
 ----------------------
 
-In order to perform some flash operations, we need to make sure both CPUs
-are not running any code from flash for the duration of the flash operation.
-In a single-core setup this is easy: we disable interrupts/scheduler and do
-the flash operation. In the dual-core setup this is slightly more complicated.
-We need to make sure that the other CPU doesn't run any code from flash.
+为了执行某些 flash 操作，我们需要确保两个 CPU 在 flash 操作期间都没有从 flash 运行任何代码。在单核中，这非常简单：禁止中断/调度器，然后执行 flash 操作。在双核中，所谓有点复杂。我们需要确保其它 CPU 没有从 flash 上面运行任何代码。
 
-
+当 SPI flahs  API 在 CPU A（可以是 PRO 或者 APP）上被调用，我们使用 API esp_ipc_call 在 CPU B 上启动函数 spi_flash_op_block_func。这个 API 会唤醒 CPU B 上的高优先级任务，告诉它取执行所给函数，即 spi_flash_op_block_func。该函数子啊 CPU B 上
 When SPI flash API is called on CPU A (can be PRO or APP), we start
 spi_flash_op_block_func function on CPU B using esp_ipc_call API. This API
 wakes up high priority task on CPU B and tells it to execute given function,

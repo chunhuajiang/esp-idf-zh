@@ -9,4 +9,4 @@
    低功耗蓝牙 <bt_le>
    经典蓝牙 <classic_bt>
 
-ESP-IDF 示例目录下的 :example:`bluetooth` 目录下的示例程序演示了如何使用这些 API。
+关于本节 API 的示例代码请参考 ESP-IDF 示例中的 :example:`bluetooth` 目录。
