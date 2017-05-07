@@ -70,15 +70,15 @@
 |  199   |     docs/api-reference/peripherals/pcnt.rst                     |     |    
 |  141   |     docs/api-reference/peripherals/timer.rst                    |     |    
 |  220   |     docs/api-reference/peripherals/rmt.rst                      |     |    
-|   41   |     docs/api-reference/storage/index.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    
+|   41   |     docs/api-reference/storage/index.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  597   |     docs/api-reference/storage/sdmmc.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    
 |  464   |     docs/api-reference/storage/fatfs.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    
 |  121   |     docs/api-reference/storage/wear-levelling.rst               |  [tidyjiang8](https://github.com/tidyjiang8)   |    
 |  457   |     docs/api-reference/storage/spi_flash.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)   |    
-|   78   |     docs/api-reference/storage/vfs.rst                          |  [tidyjiang8](https://github.com/tidyjiang8)   |    
-|  332   |     docs/api-reference/storage/nvs_flash.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)   |    
-|   23   |     docs/api-reference/ethernet/index.rst                       |  [tidyjiang8](https://github.com/tidyjiang8)   |    
-|  168   |     docs/api-reference/ethernet/esp_eth.rst                     |  [tidyjiang8](https://github.com/tidyjiang8)   |    
+|   78   |     docs/api-reference/storage/vfs.rst                          |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|  332   |     docs/api-reference/storage/nvs_flash.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   23   |     docs/api-reference/ethernet/index.rst                       |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|  168   |     docs/api-reference/ethernet/esp_eth.rst                     |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |   23   |     docs/api-reference/protocols/index.rst                      |  [tidyjiang8](https://github.com/tidyjiang8)   |    
 |  756   |     docs/api-reference/protocols/mdns.rst                       |  [tidyjiang8](https://github.com/tidyjiang8)   |    
 |   93   |     docs/api-reference/bluetooth/esp_bt_defs.rst                |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成

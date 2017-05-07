@@ -3,24 +3,24 @@
 应用程序示例
 -------------------
 
-Two examples are provided in :example:`storage` directory of ESP-IDF examples:
+下面这两个示例是在  ESP-IDF 示例的 :example:`storage` 目录提供的：
 
 :example:`storage/nvs_rw_value`
 
-  Demonstrates how to read and write a single integer value using NVS.
-
-  The value holds the number of ESP32 module restarts. Since it is written to NVS, the value is preserved between restarts.
-
-  Example also shows how to check if read / write operation was successful, or certain value is not initialized in NVS. Diagnostic is provided in plain text to help track program flow and capture any issues on the way.
-
+  演示了如何使用 NVS 读写一个整数值。
+  
+  该值记录了 ESP32 模块重启的次数。由于它是写到 NVS 中的，因此重启后该值还保留着。
+  
+  示例还演示了如何检查读/写操作是否成功，或者某个值在 NVS 中是否被初始化了。 提供的诊断消息可用于帮助跟踪程序流、采集问题。
+  
 :example:`storage/nvs_rw_blob`
 
-  Demonstrates how to read and write a single integer value and a blob (binary large object) using NVS to preserve them between ESP32 module restarts.
-
-    * value - tracks number of ESP32 module soft and hard restarts.
-    * blob - contains a table with module run times. The table is read from NVS to dynamically allocated RAM. New run time is added to the table on each manually triggered soft restart and written back to NVS. Triggering is done by pulling down GPIO0.
-
-  Example also shows how to implement diagnostics if read / write operation was successful.
+  演示了如何使用 NVS 读/写一个整数值和一块数据（二进制大对象，blob），让它们在 ESP32 模块重启后依然保存着。
+  
+    * 值 - 跟踪 ESP32 模块软件/硬件重启的次数.
+    * 块（blob） - 包含一个记录模块运行时间的表格。程序会将表格由 NVS 读取到动态分配的 RAM。每次手工触发软件复位时，新的运行时间被添加到表格中，并被写回 NVS。触发是通过下拉 GPIO0 完成的。
+    
+  示例还演示了如何检查读/写操作是否成功。
 
 
 API 参考手册
