@@ -1,92 +1,94 @@
-Non-volatile storage library
+非易失性存储器(NVS)库
 ============================
 
-Introduction
+简介
 ------------
 
-Non-volatile storage (NVS) library is designed to store key-value pairs in flash. This sections introduces some concepts used by NVS.
+非易失性存储器（Non-volatile storage，NVS）库被设计用于在 flash 中存储键值对。本节介绍一些在 NVS 中所使用的概念。
 
 Underlying storage
 ^^^^^^^^^^^^^^^^^^
 
-Currently NVS uses a portion of main flash memory through ``spi_flash_{read|write|erase}`` APIs. The library uses the first partition with ``data`` type and ``nvs`` subtype.
+当前，NVS 通过 ``spi_flash_{read|write|erase}`` API 使用了一部分主 flash 存储器。该库使用第一个分区 —— 其类型是 ``data``，子类型是 ``nvs``。
 
-Future versions of this library may add other storage backends to keep data in another flash chip (SPI or I2C), RTC, FRAM, etc.
+该库将来可能会添加其它的存储器后端，让数据可以保存在另一个 flash（I2C 或者 SPI）芯片、RTC、FRAM 等中。
 
-.. note:: if an NVS partition is truncated (for example, when the partition table layout is changed), its contents should be erased. ESP-IDF build system provides a ``make erase_flash`` target to erase all contents of the flash chip.
+.. note:: 如果 NVS 分区被截断了（例如分区表布局文件被修改），它上面的内容必修被擦除。ESP-IDF 构建系统提供了一个 ``make erase_flash`` 目标来擦除 flash 芯片上的所有内容。
 
-Keys and values
+键和值
 ^^^^^^^^^^^^^^^
 
-NVS operates on key-value pairs. Keys are ASCII strings, maximum key length is currently 15 characters. Values can have one of the following types:
+NVS 操作的对象是键值对。键是 ASCII 字符串，当前的最大键长度是 15 个字符。值可以是下面某一种类型：
 
--  integer types: ``uint8_t``, ``int8_t``, ``uint16_t``, ``int16_t``, ``uint32_t``, ``int32_t``, ``uint64_t``, ``int64_t``
--  zero-terminated string
--  variable length binary data (blob)
+-  整数值 ``uint8_t``, ``int8_t``, ``uint16_t``, ``int16_t``, ``uint32_t``, ``int32_t``, ``uint64_t``, ``int64_t``
+-  以零结尾的字符串
+-  长度可变的二进制数据 (blob)
 
-Additional types, such as ``float`` and ``double`` may be added later.
+在今后也可能支持其它类型，例如 ``float`` 和 ``double``。
 
-Keys are required to be unique. Writing a value for a key which already exists behaves as follows:
+键必须是唯一的。向一个已存在的键写值时的行为如下：
 
--  if the new value is of the same type as old one, value is updated
--  if the new value has different data type, an error is returned
+-  如果新值与就指类型相同，则将值更新
+-  如果新值与就指类型相同，则返回一个错误
 
-Data type check is also performed when reading a value. An error is returned if data type of read operation doesn’t match the data type of the value.
+读取值时会执行能够数据类型检查。如果读操作的数据类型与值的数据类型不匹配，则返回一个错误。
 
-Namespaces
+
+命名空间
 ^^^^^^^^^^
 
-To mitigate potential conflicts in key names between different components, NVS assigns each key-value pair to one of namespaces. Namespace names follow the same rules as key names, i.e. 15 character maximum length. Namespace name is specified in the ``nvs_open`` call. This call returns an opaque handle, which is used in subsequent calls to ``nvs_read_*``, ``nvs_write_*``, and ``nvs_commit`` functions. This way, handle is associated with a namespace, and key names will not collide with same names in other namespaces.
+为了减小不同组件间命令冲突的可能性，NVS 将每个键值对分配到一个命名空间中。命名空间的名字与键名的规则相同，即最长 15 个字符。命名空间的名字在执行 ``nvs_open`` 调用时指定。这个调用会返回一个不透明的句柄，这个句柄在随后调用函数 `nvs_read_*``、``nvs_write_*`` 和 ``nvs_commit`` 时使用。这样，句柄与命名空间相关联，键名就不会与其它组件具有相同名字的键冲突。
 
-Security, tampering, and robustness
+安全、篡改和鲁棒性
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-NVS library doesn't implement tamper prevention measures. It is possible for anyone with physical access to the flash chip to alter, erase, or add key-value pairs.
+NVS 库没有实现篡改预防策略。任何可以在物理上访问芯片的代码都可以更改、擦除或添加新的键值对。
 
-NVS is compatible with the ESP32 flash encryption system, and it can store  key-value pairs in an encrypted form. Some metadata, like page state and write/erase flags of individual entries can not be encrypted as they are represented as bits of flash memory for efficient access and manipulation. Flash encryption can prevent some forms of modification:
+NVS 与 ESP32 的 flash 加密系统是兼容的，它可以以加密形式存储键值对。一些元数据，例如页状态、私立入口（individual entries）的写/擦除标志，不能被加密，因为因为它们表示为有效访问和操作 flash 存储器的比特。Flash 加密可以阻止某些形式的修改：
 
-- replacing keys or values with arbitrary data
-- changing data types of values
+- 使用任意值替换键或值
+- 改变值的数据类型
 
-The following forms of modification are still possible when flash encryption is used:
+下列形式的修改即使在使用了 flash 加密依然可以：
 
-- erasing a page completely, removing all key-value pairs which were stored in that page
-- corrupting data in a page, which will cause the page to be erased automatically when such condition is detected
-- rolling back the contents of flash memory to an earlier snapshot
-- merging two snapshots of flash memory, rolling back some key-value pairs to an earlier state (although this is possible to mitigate with the current design — TODO)
+- 完整地擦除页，移除该页中擦除的所有键值对
+- 破坏（corrupting）页中的数据，发生这种情况将会造成页被自动擦除
+- 回滚 flash 存储器的状态到某个早期快照
+- 合并 flash 存储器的两个快照，回滚一些键值对到某个早起状态（即使当前的设计还不支持 — TODO）
 
-The library does try to recover from conditions when flash memory is in an inconsistent state. In particular, one should be able to power off the device at any point and time and then power it back on. This should not result in loss of data, expect for the new key-value pair if it was being written at the moment of power off. The library should also be able to initialize properly with any random data present in flash memory.
+当 flash 存储器处于非一致性状态时，库会尝试取从这些条件中恢复。特别的，你可以在任何时间、任何点将设备断电再上电，除了新键值对（即该键值对正在写时断电了），这一般不会造成数据丢失。库能够能够使用 flash 存储器中的任何随机数进行恰当地初始化。
 
-Internals
+
+内部
 ---------
 
-Log of key-value pairs
+键值对的记录
 ^^^^^^^^^^^^^^^^^^^^^^
 
-NVS stores key-value pairs sequentially, with new key-value pairs being added at the end. When a value of any given key has to be updated, new key-value pair is added at the end of the log and old key-value pair is marked as erased.
+NVS 按顺序存储键值对，新的键值对被添加到末尾。当任意所给键的值被更新时，新的键值对别添加到记录（log）的默认，旧的键值对被标记未已擦除。
 
-Pages and entries
+页和条目
 ^^^^^^^^^^^^^^^^^
 
-NVS library uses two main entities in its operation: pages and entries. Page is a logical structure which stores a portion of the overall log. Logical page corresponds to one physical sector of flash memory. Pages which are in use have a *sequence number* associated with them. Sequence numbers impose an ordering on pages. Higher sequence numbers correspond to pages which were created later. Each page can be in one of the following states:
+NVS 库在操作时主要使用了两种实体：页（page）和条目（entry）。页是一个存储整个记录中一部分内容的逻辑结构。逻辑页对应一个 flash 存储器的扇区。正在使用的页有一个与之绑定咋一起的 *序列号（sequence number）*。序列号反映了也的顺序。序列号越大表示页创建的时间越晚。每个页可以处于下列的某种状态：
 
-Empty/uninitialized
-    Flash storage for the page is empty (all bytes are ``0xff``). Page isn't used to store any data at this point and doesn’t have a sequence number.
 
-Active
-    Flash storage is initialized, page header has been written to flash, page has a valid sequence number. Page has some empty entries and data can be written there. At most one page can be in this state at any given moment.
+空/未初始化（Empty/uninitialized）
+    页的 flash 存储器是空的，即所有的字节都是``0xff``。在这种状态时，页不能用于存储任何数据，也没有序列号。
+    
+有效（Active）
+    Flash 存储器被初始化了，页的头部被写到 flash 中，且页有一个序列号。页有一些可以被写入的空的条目和数据。大多数时候，页都处于这种状态。
 
-Full
-    Flash storage is in a consistent state and is filled with key-value pairs.
-    Writing new key-value pairs into this page is not possible. It is still possible to mark some key-value pairs as erased.
+满（Full）
+    Flash 存储器处于一个一致性转台，且被写满了键值对。向该页新写的键值对将失败。此时仍然可以将某些键值对标记为已擦除。
+    
+擦除中（Erasing）
+    未被标记未已擦除的键值对正在被移动到另一页，然后该也就可以被擦除。这是一个临时状态，即当任何 API 调用返回时页都不会处于该状态。如果遇到突然断电，移动-擦除操作将在下一次上电后继续。
+    
+被破坏（Corrupted）
+    页的头部包含无效的数据，对页数据的解析将会取消。之前写入该页的任何数据都不可访问。相应的 flash 扇区不会立即擦除，将会保持为 *未初始化* 状态，以供今后使用。这有助于进行调试。
 
-Erasing
-    Non-erased key-value pairs are being moved into another page so that the current page can be erased. This is a transient state, i.e. page should never stay in this state when any API call returns. In case of a sudden power off, move-and-erase process will be completed upon next power on.
-
-Corrupted
-    Page header contains invalid data, and further parsing of page data was canceled. Any items previously written into this page will not be accessible. Corresponding flash sector will not be erased immediately, and will be kept along with sectors in *uninitialized* state for later use. This may be useful for debugging.
-
-Mapping from flash sectors to logical pages doesn't have any particular order. Library will inspect sequence numbers of pages found in each flash sector and organize pages in a list based on these numbers.
+从 flash 扇区到逻辑页的映射没有任何特殊的顺序。库将会检查每个 flash 扇区中的页序列号，然后基于这些数字将页按照形成一个链表。
 
 ::
 
@@ -102,14 +104,15 @@ Mapping from flash sectors to logical pages doesn't have any particular order. L
     | Sector 3 |  | Sector 0 |  | Sector 2 |  | Sector 1 |    <- physical sectors
     +----------+  +----------+  +----------+  +----------+
 
-Structure of a page
+页的结构
 ^^^^^^^^^^^^^^^^^^^
 
-For now we assume that flash sector size is 4096 bytes and that ESP32 flash encryption hardware operates on 32-byte blocks. It is possible to introduce some settings configurable at compile-time (e.g. via menuconfig) to accommodate flash chips with different sector sizes (although it is not clear if other components in the system, e.g. SPI flash driver and SPI flash cache can support these other sizes).
+现在我们假设 flash 扇区的大小是 4096 字节，且 ESP32 的 flash 加密硬件是以 32 字节块为单位进行操作的。为了适应扇区大小不相同的 flash 芯片，可以在编译时（例如通过配置菜单）引入一些可配置的设置（尽管不清楚系统其它组件，例如 SPI flash 驱动和 SPI flash cache，是否可以支持其它的大小）。
 
-Page consists of three parts: header, entry state bitmap, and entries themselves. To be compatible with ESP32 flash encryption, entry size is 32 bytes. For integer types, entry holds one key-value pair. For strings and blobs, an entry holds part of key-value pair (more on that in the entry structure description).
+页由三部分组成：头部、条目状态位映射（bitmap）和条目自身。为了与 ESP32 的 flash 加密兼容，条目的大小是 32 字节。对于整数类型，条目拥有一个键值对。对于字符串和块（blob），条目拥有部分键值对（更多的在条目的结构体描述符中）。
 
-The following diagram illustrates page structure. Numbers in parentheses indicate size of each part in bytes. ::
+
+下列框图描述了页的结构。原括号中的数字表示每部分的大小（以字节为单位）。 ::
 
     +-----------+--------------+-------------+-----------+
     | State (4) | Seq. no. (4) | Unused (20) | CRC32 (4) | Header (32)
@@ -126,30 +129,32 @@ The following diagram illustrates page structure. Numbers in parentheses indicat
     |                       Entry 125 (32)               |
     +----------------------------------------------------+
 
-Page header and entry state bitmap are always written to flash unencrypted. Entries are encrypted if flash encryption feature of the ESP32 is used.
+页的头部和条目状态位映射通常被写到 flash 的未加密部分。如果使用了 ESP32 的 flash 加密功能，条目会被加密。
 
-Page state values are defined in such a way that changing state is possible by writing 0 into some of the bits. Therefore it not necessary to erase the page to change page state, unless that is a change to *erased* state.
 
-CRC32 value in header is calculated over the part which doesn't include state value (bytes 4 to 28). Unused part is currently filled with ``0xff`` bytes. Future versions of the library may store format version there.
+页的状态是这样定义的：向某些比特写 0 可以改变状态。因此，一般没有必要通过擦除页来改变页的状态，除非要改变的状态是 *已擦除* 状态。
 
-The following sections describe structure of entry state bitmap and entry itself.
 
-Entry and entry state bitmap
+头部中计算的 CRC32 值不包括状态值（底 4 ～ 28 字节）。未使用部分当前使用 ``0xff`` 填充。今后的库可能会在这里存储格式化版本。
+
+下面的章节描述了条目状态位映射和条目自身的结构。
+
+条目和条目状态位映射
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each entry can be in one of the following three states. Each state is represented with two bits in the entry state bitmap. Final four bits in the bitmap (256 - 2 * 126) are unused.
+每个条目可以处于一下三个状态之一。每个状态都由条目状态位映射中的两个比特表示。位映射中的最后四个比特（256 - 2 * 126）未被使用。
 
-Empty (2'b11)
-    Nothing is written into the specific entry yet. It is in an uninitialized state (all bytes ``0xff``). 
+空 Empty (2'b11)
+    所指定的条目还没有写入任何东西。这是一个未初始化状态（所有的字节都是 ``0xff``）。
 
-Written (2'b10)
-    A key-value pair (or part of key-value pair which spans multiple entries) has been written into the entry.
+已写入 Written (2'b10)
+    一个键值对（或者跨越多个条目的键值对的一部分）已被写入到条目。
 
-Erased (2'b00)
-    A key-value pair in this entry has been discarded. Contents of this entry will not be parsed anymore.
+已擦除 Erased (2'b00)
+    该条目中的键值对被丢弃。该条目中的内容将不会被解析。
 
 
-Structure of entry
+条目的结构
 ^^^^^^^^^^^^^^^^^^
 
 For values of primitive types (currently integers from 1 to 8 bytes long), entry holds one key-value pair. For string and blob types, entry holds part of the whole key-value pair. In case when a key-value pair spans multiple entries, all entries are stored in the same page.
@@ -201,7 +206,7 @@ CRC32
 Variable length values (strings and blobs) are written into subsequent entries, 32 bytes per entry. `Span` field of the first entry indicates how many entries are used.
 
 
-Namespaces
+命名空间
 ^^^^^^^^^^
 
 As mentioned above, each key-value pair belongs to one of the namespaces. Namespaces identifiers (strings) are stored as keys of key-value pairs in namespace with index 0. Values corresponding to these keys are indexes of these namespaces. 
@@ -219,7 +224,7 @@ As mentioned above, each key-value pair belongs to one of the namespaces. Namesp
     +-------------------------------------------+
 
 
-Item hash list
+Item 哈希链表
 ^^^^^^^^^^^^^^
 
 To reduce the number of reads performed from flash memory, each member of Page class maintains a list of pairs: (item index; item hash). This list makes searches much quicker. Instead of iterating over all entries, reading them from flash one at a time, ``Page::findItem`` first performs search for item hash in the hash list. This gives the item index within the page, if such an item exists. Due to a hash collision it is possible that a different item will be found. This is handled by falling back to iteration over items in flash.

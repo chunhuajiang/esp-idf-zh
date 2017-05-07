@@ -87,16 +87,15 @@ VFS 不会限制文件路径的总长度，但是会限制文件路径前缀的�
 文件描述符
 ----------------
 
+建议在文件系统驱动中使用一个小的正整数作为文件描述符。VFS 组件假设用 ``CONFIG_MAX_FD_BITS`` 比特（默认值 12）就足够表示文件描述符。
 
-It is suggested that filesystem drivers should use small positive integers as file descriptors. VFS component assumes that ``CONFIG_MAX_FD_BITS`` bits (12 by default) are sufficient to represent a file descriptor.
+如果文件系统配置了一个文件描述符偏移选项（一个常数值），该值应当被传递到结构体 ``esp_vfs_t`` 中的 ``fd_offset`` 字段。在处理指定的文件系统的 FS 时，VFS 组件会移除这个偏移量，使其处于小的正整数的范围。
 
-If filesystem is configured with an option to offset all file descriptors by a constant value, such value should be passed to ``fd_offset`` field of ``esp_vfs_t`` structure. VFS component will then remove this offset when working with FDs of that specific FS, bringing them into the range of small positive integers.
+尽管由 VFS 返回给 newlib 库的文件描述符通常对应用程序不可见，但是理解下面的这些细节有助于调试。由 VFS 组件返回的文件描述符由两部分组成：FS 驱动 ID 和实际的文件描述符。由于 newlib 用 16 比特的整数来存储文件描述符，VFS 组件在存储这两部分时也受到 16 比特的限制。
 
-While file descriptors returned by VFS component to newlib library are rarely seen by the application, the following details may be useful for debugging purposes. File descriptors returned by VFS component are composed of two parts: FS driver ID, and the actual file descriptor. Because newlib stores file descriptors as 16-bit integers, VFS component is also limited by 16 bits to store both parts. 
+较低的 ``CONFIG_MAX_FD_BITS`` 比特被用于存储基于零（zero-based）的文件描述符。如果 FS 驱动有一个非零 ``fd_offset`` 字段， 则这个 ``fd_offset`` 会减去一个在文件系统的 ``open`` 调用时获取到的 FD，然后其结果存储到 FD 的低比特。高比特用于保存该 FS 在已注册的文件系统构成的内部表格中的索引。
 
-Lower ``CONFIG_MAX_FD_BITS`` bits are used to store zero-based file descriptor. If FS driver has a non-zero ``fd_offset`` field, this ``fd_offset`` is subtracted FDs obtained from the FS ``open`` call, and the result is stored in the lower bits of the FD. Higher bits are used to save the index of FS in the internal table of registered filesystems.
-
-When VFS component receives a call from newlib which has a file descriptor, this file descriptor is translated back to the FS-specific file descriptor. First, higher bits of FD are used to identify the FS. Then ``fd_offset`` field of the FS is added to the lower ``CONFIG_MAX_FD_BITS`` bits of the fd, and resulting FD is passed to the FS driver.
+当 VFS 组件从 newlib 接收到一个带有文件描述符的调用时，该文件描述符会被转换成文件系统相关的文件描述符。首先，FD 的高比特用于标识文件系统。然后，FS 的 ``fd_offset`` 字段与 fd 较低的 ``CONFIG_MAX_FD_BITS`` 比特相加，然后将其相加结果传递给文件系统的驱动。
 
 ::
 
@@ -124,28 +123,28 @@ When VFS component receives a call from newlib which has a file descriptor, this
 标准 IO 流 (stdin, stdout, stderr)
 -------------------------------------------
 
-If "UART for console output" menuconfig option is not set to "None", then ``stdin``, ``stdout``, and ``stderr`` are configured to read from, and write to, a UART. It is possible to use UART0 or UART1 for standard IO. By default, UART0 is used, with 115200 baud rate, TX pin is GPIO1 and RX pin is GPIO3. These parameters can be changed in menuconfig.
+如果菜单配置选项 "UART for console output" 没有设置为 "None"，则 ``stdin``、``stdout`` 和 ``stderr`` 会被配置成从 UART 中读写。UART0 或 UART1 均可以用作标准 IO。默认情况下使用的是 UART0，波特率是 115200，TX 引脚是 GPIO1，RX 引脚是 GPIO3。这些参数可以在配置菜单中修改。
 
-Writing to ``stdout`` or ``stderr`` will send characters to the UART transmit FIFO. Reading from ``stdin`` will retrieve characters from the UART receive FIFO.
+向 ``stdout`` 或 ``stderr`` 中写时会发送字符到 UART 的传输 FIFO。从 ``stdin`` 中读会从 UART 的接收 FIFO 中取数据。
 
-Note that while writing to ``stdout`` or ``stderr`` will block until all characters are put into the FIFO, reading from ``stdin`` is non-blocking. The function which reads from UART will get all the characters present in the FIFO (if any), and return. I.e. doing ``fscanf("%d\n", &var);`` may not have desired results. This is a temporary limitation which will be removed once ``fcntl`` is added to the VFS interface.
+注意，向 ``stdout`` 或 ``stderr`` 中写时会阻塞，直到所有的字符都被放到 FIFO 中；从 ``stdin`` 中读是非阻塞的。从 UART 中读的函数会获取到 FIFO 中的所有存在的字符。例如，``fscanf("%d\n", &var);`` 可能不会产生预期的结果。这个限制是临时的，且会在将 ``fcntl`` 添加到 VFS 接口后移除。
 
 标准流和 FreeRTOS 任务
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``FILE`` objects for ``stdin``, ``stdout``, and ``stderr`` are shared between all FreeRTOS tasks, but the pointers to these objects are are stored in per-task ``struct _reent``. The following code::
+``stdin``、``stdout`` 和 ``stderr`` 的 ``FILE`` 对象在所有的 FreeRTOS 任务中是共享的，但是执行这些对象的指针是存储在每个任务的 ``struct _reent`` 中的。下面的代码 ::
 
     fprintf(stderr, "42\n");
 
-actually is translated to to this (by the preprocessor):
+实际上会被（由预处理器）转换成:
 
     fprintf(__getreent()->_stderr, "42\n");
 
-where the ``__getreent()`` function returns a per-task pointer to ``struct _reent`` (:component_file:`newlib/include/sys/reent.h#L370-L417>`). This structure is allocated on the TCB of each task. When a task is initialized, ``_stdin``, ``_stdout`` and ``_stderr`` members of ``struct _reent`` are set to the values of ``_stdin``, ``_stdout`` and ``_stderr`` of ``_GLOBAL_REENT`` (i.e. the structure which is used before FreeRTOS is started).
+其中，函数 ``__getreent()`` 返回一个指向 ``struct _reent`` (:component_file:`newlib/include/sys/reent.h#L370-L417>`) 的指针。这个结构体分配在每个任务的 TCB 上。当任务被初始化时，`struct _reent`` 的成员 ``stdin``、``stdout`` 和 ``stderr`` 的值被设置为 ``_GLOBAL_REENT``（FreeRTOS 启动前的一个结构体） 的 ``_stdin``、``_stdout`` 和 ``_stderr``。
 
-Such a design has the following consequences:
+这样设计的结果：
 
-- It is possible to set ``stdin``, ``stdout``, and ``stderr`` for any given task without affecting other tasks, e.g. by doing ``stdin = fopen("/dev/uart/1", "r")``.
-- Closing default ``stdin``, ``stdout``, or ``stderr`` using ``fclose`` will close the ``FILE`` stream object — this will affect all other tasks.
-- To change the default ``stdin``, ``stdout``, ``stderr`` streams for new tasks, modify ``_GLOBAL_REENT->_stdin`` (``_stdout``, ``_stderr``) before creating the task.
+- 通过执行 ``stdin = fopen("/dev/uart/1", "r")`` 可以为任何所给任务设置 ``stdin````stdout`` 和 ``stderr``。
+- 使用 ``fclose`` 可以默认的 ``stdin``、``stdout`` 或 ``stderr`` 将关闭 ``FILE`` 流对象 — 这会影响其它所有任务。
+- 如果要为新任务改变默认的 ``stdin``、``stdout`` 或 ``stderr`` 流，则在创建任务前修改 ``_GLOBAL_REENT->_stdin`` (``_stdout``, ``_stderr``)。
 

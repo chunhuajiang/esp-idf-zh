@@ -11,7 +11,7 @@
 | 2826   |     components/openssl/OpenSSL-APIs.rst                         |      |     |
 |  582   |     components/ulp/README.rst                                   |      |     |
 |  118   |     components/expat/expat.rst                                  |      |     |
-| 2057   |     components/nvs_flash/README.rst                             |      |     |
+| 2057   |     components/nvs_flash/README.rst                             |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成|
 |  932   |     components/wear_levelling/doc/wl_sw_structure.rst           |      |     |
 |  263   |     components/wear_levelling/README.rst                        |      |     |
 |   77   |     components/bt/lib/README.rst                                |      |     |
