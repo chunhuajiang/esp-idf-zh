@@ -8,7 +8,9 @@ ESP-IDF 使用 `FatFs <http://elm-chan.org/fsw/ff/00index_e.html>`_ 库作为 FA
 FatFs with VFS
 --------------------
 
-``esp_vfs_fat.h`` header file defines functions to connect FatFs with VFS. ``esp_vfs_fat_register`` function allocates a ``FATFS`` structure, and registers a given path prefix in VFS. Subsequent operations on files starting with this prefix are forwarded to FatFs APIs. ``esp_vfs_fat_unregister_path`` function deletes the registration with VFS, and frees the ``FATFS`` structure.
+头文件 ``esp_vfs_fat.h`` 中定义的函数可以将 FatFs 与 VFS 连接起来。函数 ``esp_vfs_fat_register`` 分配了一个 ``FATFS`` 结构，并在 VSF 中注册了一个所给路径前缀。随后对以这个前缀作为开始的文件的操作将会被转发给 FatFs 的 API。函数 ``esp_vfs_fat_unregister_path`` 用于删除
+
+function deletes the registration with VFS, and frees the ``FATFS`` structure.
 
 Most applications will use the following flow when working with ``esp_vfs_fat_`` functions:
 

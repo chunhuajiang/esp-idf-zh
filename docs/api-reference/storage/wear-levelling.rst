@@ -3,8 +3,8 @@
 See also
 --------
 
-- :doc:`FAT Filesystem <../../api-guides/partition-tables>`
-- :doc:`Partition Table documentation <../../api-guides/partition-tables>`
+- :doc:`FAT 文件系统 <../../api-guides/partition-tables>`
+- :doc:`分区表文档 <../../api-guides/partition-tables>`
 
 
 应用程序示例

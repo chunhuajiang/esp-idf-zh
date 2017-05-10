@@ -6,7 +6,7 @@
 
    SPI Flash 和分区 API <spi_flash>
    SD/MMC <sdmmc>
-   非易存储器 <nvs_flash>
+   非易失型存储器 <nvs_flash>
    虚拟文件系统 <vfs>
    FAT 文件系统 <fatfs>
    损耗均衡 <wear-levelling>
