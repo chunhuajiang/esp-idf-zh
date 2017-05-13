@@ -7,7 +7,7 @@
 |字数统计 |     原文路径                                                     |   领取                       |  状态  |
 |------  |    -----------------------------------------------------------  | --------------------------- | -----------------|
 | 1236   |     components/vfs/README.rst                                   |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成|
-| 1431   |     components/log/README.rst                                   |      |     |
+| 1431   |     components/log/README.rst                                   |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成|
 | 2826   |     components/openssl/OpenSSL-APIs.rst                         |      |     |
 |  582   |     components/ulp/README.rst                                   |      |     |
 |  118   |     components/expat/expat.rst                                  |      |     |
