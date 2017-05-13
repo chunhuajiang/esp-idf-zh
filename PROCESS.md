@@ -49,8 +49,8 @@
 |  863   |     docs/get-started/eclipse-setup.rst                          |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成
 | 1281   |     docs/get-started/get-started-wrover-kit.rst                 |  [tidyjiang8](https://github.com/tidyjiang8)  |  
 |  589   |     docs/get-started/establish-serial-connection.rst            |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成
-|   29   |     docs/hw-reference/index.rst                                 |     |    
-|  509   |     docs/hw-reference/modules-and-boards.rst                    |     |    
+|   29   |     docs/hw-reference/index.rst                                 |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成     
+|  509   |     docs/hw-reference/modules-and-boards.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成      
 |   22   |     docs/api-reference/index.rst                                |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |   26   |     docs/api-reference/wifi/index.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |    
 |   37   |     docs/api-reference/wifi/esp_smartconfig.rst                 |  [tidyjiang8](https://github.com/tidyjiang8)   |    
