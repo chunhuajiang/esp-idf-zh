@@ -1,26 +1,26 @@
-Partition Tables
+分区表
 ================
 
-Overview
+概述
 --------
 
-A single ESP32's flash can contain multiple apps, as well as many different kinds of data (calibration data, filesystems, parameter storage, etc). For this reason a partition table is flashed to offset 0x8000 in the flash.
+单个 ESP32 flash 可以包含多个应用程序，以及多种数据（校验数据、文件系统、参数存储器等）。基于这个原因，在 flash 的偏移地址 0x8000 处烧写了一个分区比表。
 
-Partition table length is 0xC00 bytes (maximum 95 partition table entries). If the partition table is signed due to `secure boot`, the signature is appended after the table data.
+分区表的长度是 0xC00 字节（最多 95 个分区表条目）。如果分区表由于 `安全启动` 被签名，则签名会追加到表格的数据后面。
 
-Each entry in the partition table has a name (label), type (app, data, or something else), subtype and the offset in flash where the partition is loaded.
+分区表的每个条目都包含名字(标签)、类型（app、data 等）、子类型以及在 flash 中的偏移量（分区表被加载的地址）。
 
-The simplest way to use the partition table is to `make menuconfig` and choose one of the simple predefined partition tables:
+使用分区表最简单的方法是使用 `make menuconfig`，然后选择一个简单的预定义的分区表：
 
 * "Single factory app, no OTA"
 * "Factory app, two OTA definitions"
 
-In both cases the factory app is flashed at offset 0x10000. If you `make partition_table` then it will print a summary of the partition table.
+在这两种情况下，工厂应用程序都会被烧写到偏移量 0x10000 处。如果你运行 `make partition_table`，控制台则会打印出分配表的情况。
 
-Built-in Partition Tables
+内置分区表
 -------------------------
 
-Here is the summary printed for the "Single factory app, no OTA" configuration::
+下面是配置 "Single factory app, no OTA" 所打印出的信息 ::
 
   # Espressif ESP32 Partition Table
   # Name,   Type, SubType, Offset,  Size
@@ -28,10 +28,11 @@ Here is the summary printed for the "Single factory app, no OTA" configuration::
   phy_init, data, phy,     0xf000,  0x1000
   factory,  app,  factory, 0x10000, 1M
 
-* At a 0x10000 (64KB) offset in the flash is the app labelled "factory". The bootloader will run this app by default.
-* There are also two data regions defined in the partition table for storing NVS library partition and PHY init data.
+* flash 的偏移地址 0x10000 (64KB) 处是标记为 "factory" 的应用程序。bootloader 默认会运行这里的应用程序。
+* 分区表中还定义了连个数据区域，用于存储 NVS 库分区和 PHY 初始化数据。
 
-Here is the summary printed for the "Factory app, two OTA definitions" configuration::
+
+下面是配置 "Factory app, two OTA definitions" 所打印出的信息 ::
 
   # Espressif ESP32 Partition Table
   # Name,   Type, SubType, Offset,  Size
@@ -42,16 +43,16 @@ Here is the summary printed for the "Factory app, two OTA definitions" configura
   ota_0,    0,    ota_0,   ,        1M
   ota_1,    0,    ota_1,   ,        1M
 
-* There are now three app partition definitions.
-* The type of all three are set as "app", but the subtype varies between the factory app at 0x10000 and the next two "OTA" apps.
-* There is also a new "ota data" slot, which holds the data for OTA updates. The bootloader consults this data in order to know which app to execute. If "ota data" is empty, it will execute the factory app.
+* 存在三个应用程序分区的定义。
+* 这三个的类型都是 "app"，但是子类型不同，工厂 app 位于 0x10000 处，剩余两个是 "OTA" app。
+* 这里还有一个新的 "ota data"，它用于保存 OTA 更新的一些信息。bootloader 会使用这些数据来判断指定哪个应用程序。如果 "ota data" 是空的，它会执行工厂应用程序。
 
-Creating Custom Tables
+创建自定义分区表
 ----------------------
 
-If you choose "Custom partition table CSV" in menuconfig then you can also enter the name of a CSV file (in the project directory) to use for your partition table. The CSV file can describe any number of definitions for the table you need.
+如果你在配置菜单中选择 "Custom partition table CSV"，你需要输入用于保存你的分区表的 CSV 文件的名字（在工程目录中）。CSV 可以根据你的需要描述任意数量的定义。
 
-The CSV format is the same format as printed in the summaries shown above. However, not all fields are required in the CSV. For example, here is the "input" CSV for the OTA partition table::
+CVS 的格式与上面所打印的信息的格式是类似的。不过，不是所有的字段都需要。例如，这是一个 OTA 分区表的 "input" CSV ::
 
   # Name,   Type, SubType, Offset,   Size
   nvs,      data, nvs,     0x9000,  0x4000
@@ -61,101 +62,101 @@ The CSV format is the same format as printed in the summaries shown above. Howev
   ota_0,    app,  ota_0,   ,         1M
   ota_1,    app,  ota_1,   ,         1M
 
-* Whitespace between fields is ignored, and so is any line starting with # (comments).
-* Each non-comment line in the CSV file is a partition definition.
-* Only the offset for the first partition is supplied. The gen_esp32part.py tool fills in each remaining offset to start after the preceding partition.
+* 字段间的空格会被忽略，以 # 开始的行（注释）也会被忽略。
+* CSV 文件的每个非注释行都是一个分区定义。
+* 只提供了第一个分区的偏移量。工具 gen_esp32part.py 会自动根据前一个分区的参数来填充偏移量。
 
-Name field
-~~~~~~~~~~
+名字(Name)字段
+~~~~~~~~~~~~~~~~~~~~
 
-Name field can be any meaningful name. It is not significant to the ESP32. Names longer than 16 characters will be truncated.
+名字字段可以是任意有意义的名字。这对 ESP32 是无关紧要的。长度大于 16 个字符的名字将会被截断。
 
-Type field
-~~~~~~~~~~
+Type 字段
+~~~~~~~~~~~~~~~~~~~~
 
-Partition type field can be specified as app (0) or data (1). Or it can be a number 0-254 (or as hex 0x00-0xFE). Types 0x00-0x3F are reserved for esp-idf core functions.
+分区类型字段可以指定为 app（0）或者 data（1）。它也可以是 0-254（0x00-0xFE）之间的数字。类型 0x00-0x3F 被保留用于 esp-idf 的核心功能。
 
-If your application needs to store data, please add a custom partition type in the range 0x40-0xFE.
+如果你的应用程序需要存储数据，请添加一个类型在 0x40-0xFE 范围的自定义分区。
 
-The bootloader ignores any partition types other than app (0) & data (1).
+bootloader 会忽略所有类型不是 app（0） & data（1） 的分区。
 
-Subtype
-~~~~~~~
+子类型
+~~~~~~~~~~~~~~~~~
 
-The 8-bit subtype field is specific to a given partition type.
+8 比特的子类型字段与所给的分区类型相关。
 
-esp-idf currently only specifies the meaning of the subtype field for "app" and "data" partition types.
+esp-idf 当前只指定了 "app" 和 "data" 分区的子类型字段。
 
-App Subtypes
-~~~~~~~~~~~~
+App 子类型
+~~~~~~~~~~~~~~~~~~~~~~
 
-When type is "app", the subtype field can be specified as factory (0), ota_0 (0x10) ... ota_15 (0x1F) or test (0x20).
+当类型是 "app" 时，子类型可以是 factory (0), ota_0 (0x10) ... ota_15 (0x1F) 或 test (0x20)。
 
-- factory (0) is the default app partition. The bootloader will execute the factory app unless there it sees a partition of type data/ota, in which case it reads this partition to determine which OTA image to boot.
+- factory (0) 是默认的 app 分区。如果这里没有 data/ota 类型的分区，它会默认执行工厂 app，否则会读取该分区来判断启动哪个 OTA 镜像。
 
-  - OTA never updates the factory partition.
-  - If you want to conserve flash usage in an OTA project, you can remove the factory partition and use ota_0 instead.
-- ota_0 (0x10) ... ota_15 (0x1F) are the OTA app slots. Refer to the :doc:`OTA documentation <../api-reference/system/ota>` for more details, which then use the OTA data partition to configure which app slot the bootloader should boot. If using OTA, an application should have at least two OTA application slots (ota_0 & ota_1). Refer to the :doc:`OTA documentation <../api-reference/system/ota>` for more details.
-- test (0x2) is a reserved subtype for factory test procedures. It is not currently supported by the esp-idf bootloader.
+  - OTA 永远不会更新工厂分区。
+  - 如果你想在 OTA 工程中保护 flash 的使用，你可以移除工厂分区并使用 ota_0 代替。
+- ota_0 (0x10) ... ota_15 (0x1F) 是 OTA 应用程序插槽（slot）。更多细节请参考 :doc:`OTA 文档 <../api-reference/system/ota>`，然后使用 OTA 数据分区来配置让给 bootloader 启动哪个插槽。如果使用 OTA，应用程序应当至少包括两个 OTA 应用程序插槽（ota_0 & ota_1）。更多细节请参考 :doc:`OTA 文档 <../api-reference/system/ota>`。
+- test (0x2) 是用于工厂测试过程的保留子类型。esp-idf bootloader 当前不支持这种子类型。
 
-Data Subtypes
-~~~~~~~~~~~~~
+Data 子类型
+~~~~~~~~~~~~~~~~~~~~~~~
 
-When type is "data", the subtype field can be specified as ota (0), phy (1), nvs (2).
+当类型是 "data"时，子类型可以是 ota (0), phy (1), nvs (2)。
 
-- ota (0) is the :ref:`OTA data partition <ota_data_partition>` which stores information about the currently selected OTA application. This partition should be 0x2000 bytes in size. Refer to the :ref:`OTA documentation <ota_data_partition>` for more details.
-- phy (1) is for storing PHY initialisation data. This allows PHY to be configured per-device, instead of in firmware.
+- ota (0) 是 :ref:`OTA 数据分区 <ota_data_partition>`，用于存储当前所选择的 OTA 应用程序的信息。这个分区的大小固定为 0x2000 字节。更多细节请参考 :ref:`OTA 文档 <ota_data_partition>`。
+- phy (1) 用于存储 PHY 初始化数据。这样可以为每个设备（而不是在固件中）配置 PHY。
 
-  - In the default configuration, the phy partition is not used and PHY initialisation data is compiled into the app itself. As such, this partition can be removed from the partition table to save space.
-  - To load PHY data from this partition, run ``make menuconfig`` and enable "Component Config" -> "PHY" -> "Use a partition to store PHY init data". You will also need to flash your devices with phy init data as the esp-idf build system does not do this automatically.
-- nvs (2) is for the :doc:`Non-Volatile Storage (NVS) API <../api-reference/storage/nvs_flash>`.
+  - 在默认的配置中，phy partition 未被使用，PHY 初始化数据被编译到应用程序自身中。对于这种过情况，可以将这个分区从分区表中移除，以节约空间。
+  - 要从这个分区表中加载 PHY 数据，运行 ``make menuconfig`` 并使能 "Component Config" -> "PHY" -> "Use a partition to store PHY init data"。你还需要给你的设备烧写 phy 初始化数据，因为 esp-idf 的编译系统默认不会自动完成该操作。
+- nvs (2) 用于 :doc:`非易失性存储器 (NVS) API <../api-reference/storage/nvs_flash>`。
 
-  - NVS is used to store per-device PHY calibration data (different to initialisation data).
-  - NVS is used to store WiFi data if the :doc:`esp_wifi_set_storage(WIFI_STORAGE_FLASH) <../api-reference/wifi/esp_wifi>` initialisation function is used.
-  - The NVS API can also be used for other application data.
-  - It is strongly recommended that you include an NVS partition of at least 0x3000 bytes in your project.
-  - If using NVS API to store a lot of data, increase the NVS partition size from the default 0x6000 bytes.
+  - NVS 用于存储每个设备的 PHY 校验数据（与初始化数据不同）。
+  - NVS 用于存储 Wifi 数据（如果使用了 :doc:`esp_wifi_set_storage(WIFI_STORAGE_FLASH) <../api-reference/wifi/esp_wifi>` 初始函数）。
+  - NVS 也可以用于其它应用程序数据。
+  - 强烈建议在你的工程中包含一个大于 0x3000 字节的 NVS 分区。
+  - 如果想要使用 NVS API 来存储大量数据，请增加 NVS 分区表的大小（默认是 0x6000 字节）。
 
-Other data subtypes are reserved for future esp-idf uses.
+其它数据子类型保留。
 
-Offset & Size
-~~~~~~~~~~~~~
+偏移量 & 大小
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Only the first offset field is required (we recommend using 0x10000). Partitions with blank offsets will start after the previous partition.
+只有第一个偏移字段是需要的（我们推荐使用 0x10000）。偏移量为空白的分区将会自动跟在前一个分区的后面。
 
-App partitions have to be at offsets aligned to 0x10000 (64K). If you leave the offset field blank, the tool will automatically align the partition. If you specify an unaligned offset for an app partition, the tool will return an error.
+应用程序分区必须对齐到 0x10000 (64K)。如果它的偏移量字段为空白，工具将会自动让给分区对齐。如果你指定了一个未对齐的偏移量，工具将会返回一个错误。
 
-Sizes and offsets can be specified as decimal numbers, hex numbers with the prefix 0x, or size multipliers K or M (1024 and 1024*1024 bytes).
+大小和偏移量可以以十进制形式指定，也可以以 0x 为前缀的十六进制形式指定，或者以 K 或 M 作为单位指定（分别是 1024 和 1024*1024 字节）。
 
-Generating Binary Partition Table
----------------------------------
+产生二进制分区表
+------------------------------
 
-The partition table which is flashed to the ESP32 is in a binary format, not CSV. The tool :component_file:`partition_table/gen_esp32part.py` is used to convert between CSV and binary formats.
+烧写到 ESP32 中的分区表是二进制格式的，而不是 CSV。工具 :component_file:`partition_table/gen_esp32part.py` 可用于将分区表在 CSV 和二进制格式之间进行转化。
 
-If you configure the partition table CSV name in ``make menuconfig`` and then ``make partition_table``, this conversion is done as part of the build process.
+如果你在``make menuconfig`` 中配置了 CSV 名字，然后 ``make partition_table``，则在编译过程会自动进行转化。
 
-To convert CSV to Binary manually::
+手工将 CSV 转化为二进制格式 ::
 
   python gen_esp32part.py --verify input_partitions.csv binary_partitions.bin
 
-To convert binary format back to CSV::
+将二进制转换回 CSV ::
 
   python gen_esp32part.py --verify binary_partitions.bin input_partitions.csv
 
-To display the contents of a binary partition table on stdout (this is how the summaries displayed when running `make partition_table` are generated::
+如果需要在标志输出中显示二进制分区表的内容（这就是运行 `make partition_table` 时所产生的信息） ::
 
   python gen_esp32part.py binary_partitions.bin
 
-``gen_esp32part.py`` takes one optional argument, ``--verify``, which will also verify the partition table during conversion (checking for overlapping partitions, unaligned partitions, etc.)
+``gen_esp32part.py`` 有一个可选参数 ``--verify``，它会在转化期间校验分区表（检查重叠分区、为对齐分区等）。
 
-Flashing the partition table
-----------------------------
+烧写分区表
+--------------------------
 
-* ``make partition_table-flash``: will flash the partition table with esptool.py.
-* ``make flash``: Will flash everything including the partition table.
+* ``make partition_table-flash``: 将会使用 esptool.py 烧写分区表。
+* ``make flash``: 将会烧写包括分区表在内的所有东西。
+ 
+``make partition_table`` 时也会打印手工烧写命令。
 
-A manual flashing command is also printed as part of ``make partition_table``.
-
-Note that updating the partition table doesn't erase data that may have been stored according to the old partition table. You can use ``make erase_flash`` (or ``esptool.py erase_flash``) to erase the entire flash contents.
+注意，更新分区表不会擦除老的分区表所存储的数据。你可以使用命令 ``make erase_flash`` (或 ``esptool.py erase_flash``) 擦除整个 flash 的内容。
 
 .. _secure boot: security/secure-boot.rst
