@@ -1,65 +1,64 @@
-Deep Sleep Wake Stubs
+深度睡眠唤醒桩
 =====================
 
-ESP32 supports running a "deep sleep wake stub" when coming out of deep sleep. This function runs immediately as soon as the chip wakes up - before any normal initialisation, bootloader, or ESP-IDF code has run. After the wake stub runs, the SoC can go back to sleep or continue to start ESP-IDF normally.
+ESP32 支持从深度睡眠中醒来后运行 "深度睡眠唤醒桩(stub)"，该函数会在芯片唤醒后立即执行 —— 在运行其它任何常规初始化、bootloader、ESP-IDF 代码之前。唤醒桩运行完成后，SoC 可以重新深度睡眠，或者继续正确启动 ESP-IDF。
 
-Deep sleep wake stub code is loaded into "RTC Fast Memory" and any data which it uses must also be loaded into RTC memory. RTC memory regions hold their contents during deep sleep.
+深度睡眠唤醒桩的代码被加载到 "RTC 快速内存中"，它所使用的所有数据都必须被加载到 RTC 内存中。RTC 内存区域会在深度睡眠期间保留其内容。
 
-Rules for Wake Stubs
+唤醒桩的规则
 --------------------
 
-Wake stub code must be carefully written:
+编写唤醒桩代码时必须非常小心：
 
-* As the SoC has freshly woken from sleep, most of the peripherals are in reset states. The SPI flash is unmapped.
+* 由于 SoC 才刚刚从睡眠中唤醒，大多数外设都处于复位状态。SPI flash 也未被映射。
 
-* The wake stub code can only call functions implemented in ROM or loaded into RTC Fast Memory (see below.)
+* 唤醒桩代码只能调用在 ROM 中实现的函数或者被加载到 RTC 快速内存中的函数。
 
-* The wake stub code can only access data loaded in RTC memory. All other RAM will be unintiailised and have random contents. The wake stub can use other RAM for temporary storage, but the contents will be overwritten when the SoC goes back to sleep or starts ESP-IDF.
+* 唤醒桩代码只能访问加载到 RTC 内存中的数据。其它的所有 RAM 都是未初始化的，其内容是随机的。唤醒桩可以使用其它 RAM 作为临时存储，但是其内容会在 SoC 重新睡眠或者启动 ESP-IDF 后被覆盖。
 
-* RTC memory must include any read-only data (.rodata) used by the stub.
+* RTC 内存必须包含桩所使用的所有只读数据（.rodata）。
 
-* Data in RTC memory is initialised whenever the SoC restarts, except when waking from deep sleep. When waking from deep sleep, the values which were present before going to sleep are kept.
+* RTC 内存中的数据会在除从深度睡眠唤醒之外的其它所有 SoC 重启的时候被初始化。从深度睡眠唤醒时，之前存在的值在深度睡眠期间会继续保持不变。
 
-* Wake stub code is a part of the main esp-idf app. During normal running of esp-idf, functions can call the wake stub functions or access RTC memory. It is as if these were regular parts of the app.
+* 唤醒桩代码是主 esp-idf 应用程序的一部分。在运行 esp-idf 期间，函数可以向常规程序一样调用唤醒桩函数/访问 RTC 内存。
 
-Implementing A Stub
+桩的实现
 -------------------
 
-The wake stub in esp-idf is called ``esp_wake_deep_sleep()``. This function runs whenever the SoC wakes from deep sleep. There is a default version of this function provided in esp-idf, but the default function is weak-linked so if your app contains a function named ``esp_wake_deep_sleep()`` then this will override the default.
+Esp-idf 中的桩叫做 ``esp_wake_deep_sleep()``。SoC 每次从深度睡眠唤醒后都会运行该函数。esp-idf 默认实现了该函数，但是这个默认函数是一个虚链接函数，因此如果你的应用层中包含一个叫做 ``esp_wake_deep_sleep()`` 的函数的话，它将会覆盖这个默认函数。
 
-If supplying a custom wake stub, the first thing it does should be to call ``esp_default_wake_deep_sleep()``.
+如果要实现一个自定义的唤醒桩，需要做的第一件事应当是调用 ``esp_default_wake_deep_sleep()``。
 
-It is not necessary to implement ``esp_wake_deep_sleep()`` in your app in order to use deep sleep. It is only necessary if you want to have special behaviour immediately on wake.
+如果只是为了实现深度睡眠，你不需要在你的应用程序中实现 ``esp_wake_deep_sleep()``。只有当你希望在唤醒后立即做一些特殊行为时才有需要。
 
-If you want to swap between different deep sleep stubs at runtime, it is also possible to do this by calling the ``esp_set_deep_sleep_wake_stub()`` function. This is not necessary if you only use the default ``esp_wake_deep_sleep()`` function.
+如果你希望运行时交换两个不同的深度睡眠桩，你可以调用函数 ``esp_set_deep_sleep_wake_stub()``。如果你只使用了默认的 ``esp_wake_deep_sleep()`` 函数，则不需要。
 
-All of these functions are declared in the ``esp_deepsleep.h`` header under components/esp32.
+上面这些函数定义在组件 components/esp32 的头文件 ``esp_deepsleep.h`` 中。
 
-Loading Code Into RTC Memory
+将代码加到 RTC 内存
 ----------------------------
 
-Wake stub code must be resident in RTC Fast Memory. This can be done in one of two ways.
+唤醒桩代码必须位于 RTC 快速内存中。这可以通过两种方法实现。
 
-The first way is to use the ``RTC_IRAM_ATTR`` attribute to place a function into RTC memory::
+第一种方法是使用属性 ``RTC_IRAM_ATTR`` 将一个函数放到 RTC 内存中 ::
 
     void RTC_IRAM_ATTR esp_wake_deep_sleep(void) {
         esp_default_wake_deep_sleep();
         // Add additional functionality here
     }
 
-The second way is to place the function into any source file whose name starts with ``rtc_wake_stub``. Files names ``rtc_wake_stub*`` have their contents automatically put into RTC memory by the linker.
+第二种方法是将函数放到任意的名字以 ``rtc_wake_stub`` 开始的源代码中。以 ``rtc_wake_stub*`` 为名字的文件中的内容会被链接器自动放到 RTC 内存中。
 
-The first way is simpler for very short and simple code, or for source files where you want to mix "normal" and "RTC" code. The second way is simpler when you want to write longer pieces of code for RTC memory.
+第一种方法适用于非常简短的代码或者你想混合使用 "常规" 代码和 "RTC" 代码的源文件。第二种方法适用于比较长的 RTC 代码。
 
-
-Loading Data Into RTC Memory
+将数据加载到 RTC 内存
 ----------------------------
 
-Data used by stub code must be resident in RTC Slow Memory. This memory is also used by the ULP.
+桩代码使用的数据必须存放到 RTC 慢速内存中。该内存也会被 ULP 使用。
 
-Specifying this data can be done in one of two ways:
+指定这种数据也有两种方法：
 
-The first way is to use the ``RTC_DATA_ATTR`` and ``RTC_RODATA_ATTR`` to specify any data (writeable or read-only, respectivley) which should be loaded into RTC slow memory::
+第一种方法是是使用 ``RTC_DATA_ATTR`` 和 ``RTC_RODATA_ATTR`` 来指定需要加载到 RTC 慢速内存中的数据（分别对应于可写、只读数据） ::
 
     RTC_DATA_ATTR int wake_count;
 
@@ -69,11 +68,11 @@ The first way is to use the ``RTC_DATA_ATTR`` and ``RTC_RODATA_ATTR`` to specify
         ets_printf(fmt_str, wake_count++);
     }
 
-Unfortunately, any string constants used in this way must be declared as arrays and marked with RTC_RODATA_ATTR, as shown in the example above.
+不幸的是，按这种方法使用的字符串常量必须被申明为数组，且使用 RTC_RODATA_ATTR 进行标记，正如上面的例子中展示的那样。
 
-The second way is to place the data into any source file whose name starts with ``rtc_wake_stub``.
+第二种方法是将数据放到任意的以 ``rtc_wake_stub`` 开始的源代码中。
 
-For example, the equivalent example in ``rtc_wake_stub_counter.c``::
+例如，同一个例子在 ``rtc_wake_stub_counter.c`` 中则是 ::
 
     int wake_count;
 
@@ -82,6 +81,6 @@ For example, the equivalent example in ``rtc_wake_stub_counter.c``::
         ets_printf("Wake count %d\n", wake_count++);
     }
 
-The second way is a better option if you need to use strings, or write other more complex code.
+如果你想要使用字符串或者写一些复杂的代码，推荐使用第二种方法。
 
 

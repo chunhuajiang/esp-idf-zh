@@ -24,7 +24,7 @@
 | 1065   |     components/spi_flash/README.rst                             |      |     |
 |  252   |     components/nghttp/nghttp.rst                                |      |     |
 | 1319   |     docs/api-guides/ulp.rst                                     |      |     |
-|  713   |     docs/api-guides/deep-sleep-stub.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |   
+|  713   |     docs/api-guides/deep-sleep-stub.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |   39   |     docs/api-guides/index.rst                                   |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  785   |     docs/api-guides/core_dump.rst                               |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |    3   |     docs/api-guides/ulp_macros.rst                              |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
