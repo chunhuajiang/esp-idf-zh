@@ -21,8 +21,7 @@ SoC 复位后，PRO CPU 将会立即运行，并执行复位向量代码；此�
 
 启动代码会被复位代码调用，然后通过检查寄存器 ``GPIO_STRAP_REG``（bootstrap 引脚状态）来判断启动模式。根据复位原因的不同，可能会发生如下的行为：
 
-1. 从深度睡眠中复位：如果在 ``RTC_CNTL_STORE6_REG`` 中的值非零，且在 ``RTC_CNTL_STORE7_REG`` 中的 RTC 内存中的 CRC 值是有效的，则使用 ``RTC_CNTL_STORE6_REG`` 作为入口点地址，并立即跳转到该地址。如果 ``RTC_CNTL_STORE6_REG`` 是零，或者 ``RTC_CNTL_STORE7_REG`` 包含无效的 CRC，或者通过 ``RTC_CNTL_STORE6_REG`` 调用的代码立即返回了，则将这次启动作为上电复位启动。
-**Note**: 如果要在此时运行自定义的代码，可以使用所提供的深度睡眠 stub 机制。具体细节请参考文档 :doc:`深度睡眠 <deep-sleep-stub>` 。
+1. 从深度睡眠中复位：如果在 ``RTC_CNTL_STORE6_REG`` 中的值非零，且在 ``RTC_CNTL_STORE7_REG`` 中的 RTC 内存中的 CRC 值是有效的，则使用 ``RTC_CNTL_STORE6_REG`` 作为入口点地址，并立即跳转到该地址。如果 ``RTC_CNTL_STORE6_REG`` 是零，或者 ``RTC_CNTL_STORE7_REG`` 包含无效的 CRC，或者通过 ``RTC_CNTL_STORE6_REG`` 调用的代码立即返回了，则将这次启动作为上电复位启动。**Note**: 如果要在此时运行自定义的代码，可以使用所提供的深度睡眠桩机制。具体细节请参考文档 :doc:`深度睡眠 <deep-sleep-stub>` 。
 
 2. 对于上电复位，软件 SoC 复位，以及看门狗 SoC 复位：如果请求了 UART 或 SDIO 下载模式，则检查寄存器 ``GPIO_STRAP_REG``。对于这种情形，会配置 UART 或者 SDIO，并等待下载代码。否则，将这次启动作为软件 CPU 复位。
 
