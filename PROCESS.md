@@ -20,7 +20,7 @@
 | 1065   |     components/spi_flash/README.rst                             |      |     |
 |  252   |     components/nghttp/nghttp.rst                                |      |     |
 | 1319   |     docs/api-guides/ulp.rst                                     |      |     |
-|  713   |     docs/api-guides/deep-sleep-stub.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |   
+|  713   |     docs/api-guides/deep-sleep-stub.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |   39   |     docs/api-guides/index.rst                                   |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  785   |     docs/api-guides/core_dump.rst                               |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |    3   |     docs/api-guides/ulp_macros.rst                              |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
@@ -29,11 +29,11 @@
 | 1384   |     docs/api-guides/partition-tables.rst                        |     |   
 | 3160   |     docs/api-guides/ulp_instruction_set.rst                     |     |   
 |  421   |     docs/api-guides/unit-tests.rst                              |     |   
-| 1857   |     docs/api-guides/general-notes.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
+| 1857   |     docs/api-guides/general-notes.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  100   |     docs/resources.rst                                          |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  142   |     docs/index.rst                                              |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 | 2565   |     docs/security/secure-boot.rst                               |     |   
-| 3735   |     docs/security/flash-encryption.rst                          |     |   
+| 3735   |     docs/security/flash-encryption.rst                          |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  401   |     docs/get-started/make-project.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成
 |  283   |     docs/get-started/add-idf_path-to-profile.rst                |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成
 |  759   |     docs/get-started/idf-monitor.rst                            |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成

@@ -1,290 +1,292 @@
-Flash Encryption
+Flash 加密
 ================
 
-Flash Encryption is a feature for encrypting the contents of the ESP32's attached SPI flash. When flash encryption is enabled, physical readout of the SPI flash is not sufficient to recover most flash contents.
+Flash 加密功能可用于加密 ESP32 所连接的 SPI flash 上面的内容。当 flash 加密被使能后，从 SPI flash 上面读出的数据不足以用于恢复 flash 上面所存储的大多数内容。
 
-Flash Encryption is separate from the :doc:`Secure Boot <secure-boot>` feature, and you can use flash encryption without enabling secure boot. However we recommend using both features together for a secure environment.
+Falsh 加密是与 :doc:`安全启动 <secure-boot>` 相独立的另一个功能，你可以在不使能安全加密的情况下单独使用 flash 加密功能。不过，为了有一个更加安全的环境，我们推荐同时使用这两种技术。
 
-**IMPORTANT: Enabling flash encryption limits your options for further updates of your ESP32. Make sure to read this document (including :ref:`flash-encryption-limitations`) and understand the implications of enabling flash encryption.**
+**IMPORTANT: 使能 flash 加密将会限制你今后可以对 ESP32 进行更新的次数。请确保仔细阅读本文档（包括 :ref:`flash-encryption-limitations`）并充分理解使能 flash 加密的含义。 **
 
-Background
+
+背景
 ----------
 
-- The contents of the flash are encrypted using AES with a 256 bit key. The flash encryption key is stored in efuse internal to the chip, and is (by default) protected from software access.
+- flash 的内容使用秘钥长度为 256 比特的 AES 进行加密。flash 的加密密钥存储在芯片内部的 efuse 中，且（默认）被保护，以免软件访问呢。
 
-- Flash access is transparent via the flash cache mapping feature of ESP32 - any flash regions which are mapped to the address space will be transparently decrypted when read.
+- 通过 ESP32 的 flash cache 映射功能对 flash 的访问是透明的 - 读取时，所有被映射到这段地址空间的 flash 区域都会被透明地解密。
 
-- Encryption is applied by flashing the ESP32 with plaintext data, and (if encryption is enabled) the bootloader encrypts the data in place on first boot.
+- 加密是通过给 ESP32 烧写明码文本数据、然后由 bootloader 在第一次启动准备就绪后对这些数据进行加密完成的（如果加密被使能）。
 
-- Not all of the flash is encrypted. The following kinds of flash data are encrypted:
+- 不是所有的 flash 都会被加密。下列 flash 数据不会被加密：
 
   - Bootloader
-  - Secure boot bootloader digest (if secure boot is enabled)
-  - Partition Table
-  - All "app" type partitions
-  - Any partition marked with the "encrypt" flag in the partition table
+  - 安全启动 bootloader digest （如果安全启动被使能）
+  - 分区表
+  - 所有的 "app" 类型的分区
+  - 在分区表中所有标记了 "encrypt" 的分区
 
-	It may be desirable for some data partitions to remain unencrypted for ease of access, or to use flash-friendly update algorithms that are ineffective if the data is encrypted. "NVS" partitions for non-volatile storage cannot be encrypted.
+为了易于访问，或者为了使用 flash 友好的更新算法（数据加密后对算法有影响），有时候需要某些数据分区不被加密。非易失型存储器的 "NVS" 分区不能被加密。
 
-- The flash encryption key is stored in efuse key block 1, internal to the ESP32 chip. By default, this key is read- and write-protected so software cannot access it or change it.
+- flash 的加密秘钥存储在 ESP32 芯片内部的 efuse 密钥块 1 中。默认情况下，这个密钥是读/写保护的，因此软件不能访问或者修改它。
 
-- The `flash encryption algorithm` is AES-256, where the key is "tweaked" with the offset address of each 32 byte block of flash. This means every 32 byte block (two consecutive 16 byte AES blocks) is encrypted with a unique key derived from the flash encryption key.
+- `flash 加密算法` 使用的是 AES-256，其密钥是通过 flash 的 32 字节的块的偏移地址进行调整的。这意味着，每 32 字节的块（两个连续的 16 字节 AES 块）是通过由 flash 加密密钥推断出来的唯一的密钥（unique key）进行加密的。
 
-- Although software running on the chip can transparently decrypt flash contents, by default it is made impossible for the UART bootloader to decrypt (or encrypt) data when flash encryption is enabled.
+- 尽管运行在芯片上的软件可以透明地对 flash 上面的内容进行解密，但是当 falsh 加密被使能后，UART bootloader（默认）不能对数据进行加密/解密。
 
-- If flash encrption may be enabled, the programmer must take certain precautions when writing code that :ref:`uses encrypted flash <using-encrypted-flash>`.
+- 如果 flash 加密被使能，当程序员在 :ref:`使用加密的 flash <using-encrypted-flash>` 写代码时必须进行更加周详的考虑。
 
 .. _flash-encryption-initialisation:
 
-Flash Encryption Initialisation
+Flash 加密的初始化
 -------------------------------
 
-This is the default (and recommended) flash encryption initialisation process. It is possible to customise this process for development or other purposes, see :ref:`flash-encryption-advanced-features` for details.
+这里描述的是 flash 加密初始化的默认（且推荐）过程。如果需要实现特殊的功能，也可以自定义该过程，具体细节请参考 :ref:`flash-encryption-advanced-features`。
 
-**IMPORTANT: Once flash encryption is enabled on first boot, the hardware allows a maximum of 3 subsequent flash updates via serial re-flashing.** A special procedure (documented in :ref:`updating-encrypted-flash-serial`) must be followed to perform these updates.
+**IMPORTANT: 一旦在某次启动时使能 flash 加密后，随后通过串口对 flash 重新烧写最多只有三次机会。** 且需要执行特殊的步骤（参考文档 :ref:`updating-encrypted-flash-serial`）才能进行烧写。
 
-- If secure boot is enabled, no physical re-flashes are possible.
-- OTA updates can be used to update flash content without counting towards this limit.
-- When enabling flash encryption in development, use a `pregenerated flash encryption key` to allow physically re-flashing an unlimited number of times with pre-encrypted data.**
+- 如果安全启动被使用，则再也不能在物理上进行重新烧写。
+- OTA 可以用于更新 flash 上面的内容，没有受到这种限制。
+- 当在开发过程中使能 flash 加密时，使用 `预生成的 flash 加密密钥` 可以在物理上对预加密的数据进行无数次的重新烧写。**
 
-Process to enable flash encryption:
+使能 flash 加密的过程：
 
-- The bootloader must be compiled with flash encryption support enabled. In ``make menuconfig``, navigate to "Security Features" and select "Yes" for "Enable flash encryption on boot".
+- bootloader 在被编译时必须使能 flash 加密功能。在 ``make menuconfig``中，进入 "Security Features" 并给 "Enable flash encryption on boot" 选择 "Yes"。
 
-- If enabling Secure Boot at the same time, it is best to simultaneously select those options now. Read the :doc:`Secure Boot <secure-boot>` documentation first.
+- 如果同时还使能了安全启动，最好同时也选上这些选项。请先参考文档 :doc:`安全启动 <secure-boot>`。
 
-- Build and flash the bootloader, partition table and factory app image as normal. These partitions are initially written to the flash unencrypted.
+- 像常规方法一样编译和烧写 bootloader、分区表和工厂 app。这些分区在初次被写入 flash 时是未被加密的。
 
-- On first boot, the bootloader sees :ref:`FLASH_CRYPT_CNT` is set to 0 (factory default) so it generates a flash encryption key using the hardware random number generator. This key is stored in efuse. The key is read and write protected against further software access.
+- 第一次启动时，bootloader 将会看到 :ref:`FLASH_CRYPT_CNT` 被设置为 0（工厂默认），然后它会使用硬件随机数发生器生成一个 falsh 加密密钥。这个密钥会被存储在 efuse 中，且具有软件读/写保护的功能。
 
-- All of the encrypted partitions are then encrypted in-place by the bootloader. Encrypting in-place can take some time (up to a minute for large partitions.)
+- 所有的加密分区然后被 bootloader 加密。加密需要一段时间（大分区最多会需要一分钟）。
 
-**IMPORTANT: Do not interrupt power to the ESP32 while the first boot encryption pass is running. If power is interrupted, the flash contents will be corrupted and require flashing with unencrypted data again. A  reflash like this will not count towards the flashing limit.**
+**IMPORTANT: 当第一次启动在进行加密时，不要中断对 ESP32 的供电。如果供电被中断，flash 中的内容将会被破坏，然后需要使用未加密的数据进行重新烧写。这种重新烧写不会影响烧写次数限制。**
 
-- Once flashing is complete. efuses are blown (by default) to disable encrypted flash access while the UART bootloader is running. See :ref:`uart-bootloader-encryption` for advanced details.
+- 当烧写完成后，efuses 会在 UART bootloader 运行期间禁止对加密 flash 的访问。请查看 :ref:`uart-bootloader-encryption`  以了解高级特性。
 
-- The ``FLASH_CRYPT_CONFIG`` efuse is also burned to the maximum value (``0xF``) to maximise the number of key bits which are tweaked in the flash algorithm. See :ref:`setting-flash-crypt-config` for advanced details.
+- efuse ``FLASH_CRYPT_CONFIG`` 被烧写为最大值（``0xF``），以得到一个位数最大的密钥（在 flash 算法中被调整）。请查看 ref:`setting-flash-crypt-config` 以了解高级特性。
 
-- Finally, the :ref:`FLASH_CRYPT_CNT` is burned with the initial value 1. It is this efuse which activates the transparent flash encryption layer, and limits the number of subsequent reflashes. See the :ref:`updating-encrypted-flash` section for details about :ref:`FLASH_CRYPT_CNT`.
+- 最后，:ref:`FLASH_CRYPT_CNT` 被烧写为一个初始值 1。就是这个 efuse 激活了 flash 透明加密层并限制了随后可重新烧写的次数。关于 :ref:`FLASH_CRYPT_CNT` 的更多细节请参考章节 :ref:`updating-encrypted-flash`。
 
-- The bootloader resets itself to reboot from the newly encrypted flash.
+- bootloader 自身复位，并从新的被加密的 flash 重启。
 
 .. _using-encrypted-flash:
 
-Using Encrypted Flash
+使用加密的 Flash
 ---------------------
 
-ESP32 app code can check if flash encryption is currently enabled by calling :func:`esp_flash_encryption_enabled`.
+ESP32 应用程序代码可以通过调用 :func:`esp_flash_encryption_enabled` 来检查当前是否使能了 flash 加密功能。
 
-Once flash encryption is enabled, some care needs to be taken when accessing flash contents from code.
+当 flash 加密被使能后， 从代码中访问 flash 上面的内容时需要考虑一些额外的东西。
 
-Scope of Flash Encryption
+Flash 加密的范围
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Whenever the :ref:`FLASH_CRYPT_CNT` is set to a value with an odd number of bits set, all flash content which is accessed via the MMU's flash cache is transparently decrypted. This includes:
+无论什么时候，只要 :ref:`FLASH_CRYPT_CNT` 被设置了一个新的奇数比特位，所有通过 MMU cache 访问的 flash 内容都会被透明地解密。这包括：
 
-- Executable application code in flash (IROM).
-- All read-only data stored in flash (DROM).
-- Any data accessed via :func:`esp_spi_flash_mmap`.
-- The software bootloader image when it is read by the ROM bootloader.
+- flash 上面的应用程序可执行代码（IROM）
+- 存储在 flash 中的所有只读数据（DROM）
+- 所有通过 :func:`esp_spi_flash_mmap` 访问的数据
+- 正在被 ROM bootloader 读取的软件 bootloader 镜像
 
-**IMPORTANT: The MMU flash cache unconditionally decrypts all data. Data which is stored unencrypted in the flash will be "transparently decrypted" via the flash cache and appear to software like random garbage.**
+**IMPORTANT: MMU flash cache 会无条件地解码所有数据。在 flash 中存储的未加密数据会通过 flash cache 被透明地解密，然后对软件来说就是垃圾数据。**
 
-Reading Encrypted Flash
-^^^^^^^^^^^^^^^^^^^^^^^
-To read data without using a flash cache MMU mapping, we recommend using the partition read function :func:`esp_partition_read`. When using this function, data will only be decrypted when it is read from an encrypted partition. Other partitions will be read unencrypted. In this way, software can access encrypted and non-encrypted flash in the same way.
-
-Data which is read via other SPI read APIs are not decrypted:
-
-- Data read via :func:`esp_spi_flash_read` is not decrypted
-- Data read via ROM function :func:`SPIRead` is not decrypted (this function is not supported in esp-idf apps).
-- Data stored using the Non-Volatile Storage (NVS) API is always stored and read decrypted.
-
-
-Writing Encrypted Flash
+读取加密的 Flash
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Where possible, we recommend using the partition write function ``esp_partition_write``. When using this function, data will only be encrypted when writing to encrypted partitions. Data will be written to other partitions unencrypted. In this way, software can access encrypted and non-encrypted flash in the same way.
+如果要在读取数据时不使用 flash cache MMU 映射，我们推荐使用分区读取函数 :func:`esp_partition_read`。当使用这个函数时，只有从加密分区中读取的数据会被解密，其它分区读取的数据不会被解密。通过这种方法，软件可以以同一种方法访问加密和未加密的 falsh。
 
-The ``esp_spi_flash_write`` function will write data when the write_encrypted parameter is set to true. Otherwise, data will be written unencrypted.
+以其它 SPI 读 API 所读取的数据不会被解密：
 
-The ROM function ``esp_rom_spiflash_write_encrypted`` will write encrypted data to flash, the ROM function ``SPIWrite`` will write unencrypted to flash. (these function are not supported in esp-idf apps).
+- 通过 :func:`esp_spi_flash_read` 读取的数据不被解密。
+- 通过 ROM 函数  :func:`SPIRead` 读取的数据不被解密（该函数不支持 esp-idf 应用程序）。
+- 使用非易失性存储器 (NVS) API 存储的数据总是以解密形式进行存储/读取。
 
-The minimum write size for unencrypted data is 4 bytes (and the alignment is 4 bytes). Because data is encrypted in blocks, the minimum write size for encrypted data is 16 bytes (and the alignment is 16 bytes.)
+
+写加密的 Flash
+^^^^^^^^^^^^^^^^^^^^^^^
+
+只要可能，我们都推荐使用分区写函数 ``esp_partition_write``。当使用该函数时，只有往加密分区中写的数据会被加密，往其它分区写的数据不会被加密。通过这种方法，软件可以以同一种方法访问加密和未加密的 falsh。
+
+当参数 write_encrypted 设置为 true 时，函数 ``esp_spi_flash_write`` 将以加密的形式写数据，否则则会以未加密的形式写数据。
+
+
+ROM 函数 ``esp_rom_spiflash_write_encrypted`` 将会写加密数据到 flash，ROM 函数 ``SPIWrite`` 将会写未加密数据到 flash 中（这些函数不支持 esp-idf 应用程序）。
+
+未加密数据的最小写尺寸是 4 字节（且是 4 字节对齐的）。由于数据加密是以块为单位的，加密数据的最小写尺寸是 16 字节（且是以 16 字节对齐的）。
 
 .. _updating-encrypted-flash:
 
-Updating Encrypted Flash
+更新加密的 Flash
 ------------------------
 
 .. _updating-encrypted-flash-ota:
 
-OTA Updates
+OTA 更新
 ^^^^^^^^^^^
 
-OTA updates to encrypted partitions will automatically write encrypted, as long as the ``esp_partition_write`` function is used.
+对加密分区进行 OTA 更新时，只要使用的函数是 ``esp_partition_write``，该分区就会被自动以加密的形式进行写。
 
 .. _updating-encrypted-flash-serial:
 
-Serial Flashing
+串口烧写
 ^^^^^^^^^^^^^^^
 
-Provided secure boot is not used, the :ref:`FLASH_CRYPT_CNT` allows the flash to be updated with new plaintext data via serial flashing (or other physical methods), up to 3 additional times.
+如果没有使用安全启动，:ref:`FLASH_CRYPT_CNT` 允许通过串口烧写的方式（或其它物理方式）对 flash 进行更新，但最多有三次额外的机会。
 
-The process involves flashing plaintext data, and then bumping the value of :ref:`FLASH_CRYPT_CNT` which causes the bootloader to re-encrypt this data.
+该过程涉及烧写明码文本数据、更改（bump）:ref:`FLASH_CRYPT_CNT` 的值，从而引起 bootloader 对该数据进行重新加密。
 
-Limited Updates
+
+有限的更新
 ~~~~~~~~~~~~~~~
 
-Only 4 serial flash update cycles of this kind are possible, including the initial encrypted flash.
+这种情况下只有 4 次串口烧写机会，其中还包括初始加密 flash 在内的那次机会。
 
-After the fourth time encryption is disabled, :ref:`FLASH_CRYPT_CNT` has the maximum value `0xFF` and encryption is permanently disabled.
+当第四次加密被禁止后，:ref:`FLASH_CRYPT_CNT` 将拥有一个最大值 `0xFF`，加密被永久禁止。
 
-Using :ref:`updating-encrypted-flash-ota` or :ref:`pregenerated-flash-encryption-key` allows you to exceed this limit.
+使用 :ref:`updating-encrypted-flash-ota` 或 :ref:`pregenerated-flash-encryption-key` 可以绕过这种限制。
 
-Cautions With Serial Flashing
+串口烧写的注意事项
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- When reflashing via serial, reflash every partition that was initially written with plaintext data (including bootloader). It is possible to skip app partitions which are not the "currently selected" OTA partition (these will not be re-encrypted unless a plaintext app image is found there.) However any partition marked with the "encrypt" flag will be unconditionally re-encrypted, meaning that any already encrypted data will be encrypted twice and corrupted.
+- 当使用串口重新烧写时，需要重新烧写所有使用明码文本初始化的分区（包括 bootloader），但是可以跳过非 "当前所选择" 的那个 OTA 分区（除非在上面发现了明码文本应用程序镜像，否则不会待其进行重新加密）。不过，所有有 "加密" 标记的分区会被无条件地重新加密，这也意味着已被加密的数据会被再次加密而被破坏。
 
-  - Using ``make flash`` should flash all partitions which need to be flashed.
+  - 使用 ``make flash`` 会烧写所有需要烧写的分区。
 
-- If secure boot is enabled, you can't reflash via serial at all unless you used the "Reflashable" option for Secure Boot, pre-generated a key and burned it to the ESP32 (refer to :doc:`Secure Boot <secure-boot>` docs.). In this case you can re-flash a plaintext secure boot digest and bootloader image at offset 0x0. It is necessary to re-flash this digest before flashing other plaintext data.
+- 如果安全启动被使能，除非你的安全启动使用了 "重新烧写" 选项并烧写了预生成的密钥（参考 :doc:`Secure Boot <secure-boot>` 文档），否则你不能使用串口进行串行烧写。在这种情况下，你可以在偏移地址 0x0 处重新烧写一个明码文本的安全启动 digest 和 bootloader 镜像。在烧写其它明码文本数据之前，必须要先烧写这个 digest。
 
-Serial Re-Flashing Procedure
+串口重新烧写的过程
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Build the application as usual.
+- 像平常一样编译应用程序。
 
-- Flash the device with plaintext data as usual (``make flash`` or ``esptool.py`` commands.) Flash all previously encrypted partitions, including the bootloader (see previous section).
+- 像平常一样给设备烧写明码文本数据（``make flash`` 或 ``esptool.py`` 命令），烧写之前的所有加密分区（包括 bootloader）。
 
-- At this point, the device will fail to boot (message is ``flash read err, 1000``) because it expects to see an encrypted bootloader, but the bootloader is plaintext.
+- 此时，设备将不能启动（提示消息 ``flash read err, 1000``），这是因为它期望看到的是一个加密的 bootloader，而实际上却是一个明码文本。
 
-- Burn the :ref:`FLASH_CRYPT_CNT` by running the command ``espefuse.py burn_efuse FLASH_CRYPT_CNT``. espefuse.py will automatically increment the bit count by 1, which disables encryption.
+- 使用命令 ``espefuse.py burn_efuse FLASH_CRYPT_CNT`` 烧写 :ref:`FLASH_CRYPT_CNT`。espefuse.py 会自动给计数比特加 1，并禁止加密。
 
-- Reset the device and it will re-encrypt plaintext partitions, then burn the :ref:`FLASH_CRYPT_CNT` again to re-enable encryption.
+- 复位设备，然后设备会重新加密明码文本分区，然后再次烧写 :ref:`FLASH_CRYPT_CNT` 以重新使能加密功能。
 
-
-Disabling Serial Updates
+禁止串口更新
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-To prevent further plaintext updates via serial, use espefuse.py to write protect the :ref:`FLASH_CRYPT_CNT` after flash encryption has been enabled (ie after first boot is complete)::
+如果需要阻止今后使用串口更新明码文本，可以在 flash 加密被使能后（即第一次启动完成后）使用  espefuse.py 写保护 :ref:`FLASH_CRYPT_CNT` ::
 
     espefuse.py --port PORT write_protect_efuse FLASH_CRYPT_CNT
 
-This prevents any further modifications to disable or re-enable flash encryption.
+这将会禁止今后做任何改动，以禁止/重新使能 flash 加密。
 
 .. _pregenerated-flash-encryption-key:
 
-Reflashing via Pregenerated Flash Encryption Key
+通过预生成的 Flash 加密密钥重新烧写
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is possible to pregenerate a flash encryption key on the host computer and burn it into the ESP32's efuse key block. This allows data to be pre-encrypted on the host and flashed to the ESP32 without needing a plaintext flash update.
+你也可以在 PC 上面预生成一个 flash 加密密钥，然后将它烧写到 ESP32 的 efuse 密钥块中。这样做的好处是可以在主机对数据预加密，然后将加密后的数据烧写到 ESP32 上面，从而不需要明码文本烧写更新。
 
-This is useful for development, because it removes the 4 time reflashing limit. It also allows reflashing with secure boot enabled, because the bootloader doesn't need to be reflashed each time.
+这在开发过程中是很有用的，因为它没有 4 次重烧的限制。此外，即使安全启动被使能，也可以无限次地重新烧写，因为 bootloader 不需要每次都被烧写。
 
-**IMPORTANT This method is intended to assist with development only, not for production devices. If pre-generating flash encryption for production, ensure the keys are generated from a high quality random number source and do not share the same flash encryption key across multiple devices.**
+**IMPORTANT 这种方法只是为了方便开发，不要用于实际的产品设备。如果要为产品生成 flash 加密数据，请确保使用一个高质量的随机数源产生加密密钥，且不要在多个设备之间共享同一个 flash 加密密钥。**
 
-Pregenerating a Flash Encryption Key
+预生成 Flash 加密密钥
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Flash encryption keys are 32 bytes of random data. You can generate a random key with espsecure.py::
+Flash 加密密钥是一个 32 字节的随机数。你可以使用 espsecure.py 生成一个随机密钥 ::
 
   espsecure.py generate_flash_encryption_key my_flash_encryption_key.bin
 
-(The randomness of this data is only as good as the OS and it's Python installation's random data source.)
+(随机数的质量与 OS 以及 Python 所安装的随机数源相关。)
 
-Alternatively, if you're using :doc:`secure boot <secure-boot>` and have a secure boot signing key then you can generate a deterministic SHA-256 digest of the secure boot private signing key and use this as the flash encryption key::
+另外，如果你正在使用 :doc:`安全启动 <secure-boot>`，且有一个安全启动签名密钥，你可以生成一个安全启动私有签名密钥的 SHA-256 digest，并使用它作为 flash 加密密钥 ::
 
   espsecure.py digest_private-key --keyfile secure_boot_signing_key.pem my_flash_encryption_key.bin
 
-(The same 32 bytes is used as the secure boot digest key if you enable :ref:`reflashable mode<secure-boot-reflashable>` for secure boot.)
+(如果你在安全启动中使能了 :ref:`可重新烧写模式<secure-boot-reflashable>`，则这 32 字节的数据还将作为安全启动 digest 密钥。)
 
-Generating the flash encryption key from the secure boot signing key in this way means that you only need to store one key file. However this method is **not at all suitable** for production devices.
+通过这种从全球启动签名密钥生成 flash 加密密钥的方式意味着你只需要存储一个密钥文件。不过，这种方法 **完全不适用于** 实际产品中的设备。
 
-Burning Flash Encryption Key
+烧写 Flash 加密密钥
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you have generated a flash encryption key, you need to burn it to the ESP32's efuse key block. **This must be done before first encrypted boot**, otherwise the ESP32 will generate a random key that software can't access or modify.
+生成 flash 加密密钥后，你还需要将它烧写到 ESP32 的 efuse 密钥块中。**这必须在加密启动前完成**，否则 ESP32 将会产生一个随机密钥，导致软件不能访问/修改 flash 上的内容。
 
-To burn a key to the device (one time only)::
+将密钥烧写到设备（只需要一次） ::
 
   espefuse.py --port PORT burn_key flash_encryption my_flash_encryption_key.bin
 
-First Flash with pregenerated key
+使用预生成的密钥第一次烧写
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After flashing the key, follow the same steps as for default :ref:`flash-encryption-initialisation` and flash a plaintext image for the first boot. The bootloader will enable flash encryption using the pre-burned key and encrypt all partitions.
+烧写完密钥后，按照默认 :ref:`flash-encryption-initialisation` 步骤进行操作，并为第一次启动烧写一个明码文本镜像。bootloader将会使用预先烧写的密钥使能 flash 加密并加密所有分区。
 
-Reflashing with pregenerated key
+使用预生成的密钥重新烧写
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After encryption is enabled on first boot, reflashing an encrypted image requires an additional manual step. This is where we pre-encrypt the data that we wish to update in flash.
+当第一次启动使能加密后，重新烧写加密的镜像需要一步额外的手工步骤，即预加密我们需要烧写到 flash 中的数据。
 
-Suppose that this is the normal command used to flash plaintext data::
+假设这是你用于烧写明码文本数据的命令 ::
 
   esptool.py --port /dev/ttyUSB0 --baud 115200 write_flash 0x10000 build/my-app.bin
 
-Binary app image ``build/my-app.bin`` is written to offset ``0x10000``. This file name and offset need to be used to encrypt the data, as follows::
+二进制应用程序镜像 ``build/my-app.bin`` 被烧写到偏移地址 ``0x10000`` 处。这里的文件名和偏移地址要用于加密数据 ::
 
   espsecure.py encrypt_flash_data --keyfile my_flash_encryption_key.bin --address 0x10000 -o build/my-app-encrypted.bin build/my-app.bin
 
-This example command will encrypts ``my-app.bin`` using the supplied key, and produce an encrypted file ``my-app-encrypted.bin``. Be sure that the address argument matches the address where you plan to flash the binary.
+上面这条命令会使用所提供的密钥加密 ``my-app.bin``，并产生一个加密文件 ``my-app-encrypted.bin``。请确保这里的地址参数与你将要烧写二进制镜像的地址相匹配。
 
-Then, flash the encrypted binary with esptool.py::
+然后，使用 esptool.py 烧写加密后的二进制文件 ::
 
     esptool.py --port /dev/ttyUSB0 --baud 115200 write_flash 0x10000 build/my-app-encrypted.bin
 
-No further steps or efuse manipulation is necessary, because the data is already encrypted when we flash it.
+至此，已经不需要其它的步骤了，因为数据已经被加密并烧写完成了。
 
-Disabling Flash Encryption
+禁止 Flash 加密
 --------------------------
 
-If you've accidentally enabled flash encryption for some reason, the next flash of plaintext data will soft-brick the ESP32 (the device will reboot continously, printing the error ``flash read err, 1000``).
+如果你由于某些原因意外地把 flash 加密功能使能了， the next flash of plaintext data will soft-brick the ESP32 （设备将会连续重启，并打印错误 ``flash read err, 1000``）。
 
-You can disable flash encryption again by writing :ref:`FLASH_CRYPT_CNT`:
+你可以通过写 :ref:`FLASH_CRYPT_CNT` 再次禁止 flash 加密：
 
-- First, run ``make menuconfig`` and uncheck "Enable flash encryption boot" under "Security Features".
-- Exit menuconfig and save the new configuration.
-- Run ``make menuconfig`` again and double-check you really disabled this option! *If this option is left enabled, the bootloader will immediately re-enable encryption when it boots*.
-- Run ``make flash`` to build and flash a new bootloader and app, without flash encryption enabled.
-- Run ``espefuse.py`` (in ``components/esptool_py/esptool``) to disable the :ref:`FLASH_CRYPT_CNT`)::
+- 首先，运行 ``make menuconfig`` 并取消 "Security Features" 下面的复选框 "Enable flash encryption boot"。
+- 退出配置菜单并保存新的配置。
+- 再次运行 ``make menuconfig`` ，再次检查是否真的禁止了该选项！*如果该选项被使能，bootloader 启动时会立即再次重新加密*。
+- 运行 ``make flash`` to 编译并烧写 flash 加密未被使能的 bootloader 和应用程序。
+- 运行 ``espefuse.py`` (在 ``components/esptool_py/esptool`` 下面) 禁止 :ref:`FLASH_CRYPT_CNT`)::
     espefuse.py burn_efuse FLASH_CRYPT_CNT
 
-Reset the ESP32 and flash encryption should be disabled, the bootloader will boot as normal.
+给 ESP32 复位，此时 flash 加密功能会被禁止，bootloader 会像平常一样启动。
 
 .. _flash-encryption-limitations:
 
-Limitations of Flash Encryption
+Flash 加密的限制
 -------------------------------
 
-Flash Encryption prevents plaintext readout of the encrypted flash, to protect firmware against unauthorised readout and modification. It is important to understand the limitations of the flash encryption system:
+Flash 加密功能可以阻止读取加密的 flash 的内容，保护固件，使其不会在未授权时被读取和修改。如果打算使用 flash 加密系统，则非常有必要理解它的限制：
 
-- Flash encryption is only as strong as the key. For this reason, we recommend keys are generated on the device during first boot (default behaviour). If generating keys off-device (see :ref:`pregenerated-flash-encryption-key`), ensure proper procedure is followed.
+- Flash 加密的安全性完全由密钥决定。因此，我们推荐在设备第一次启动时由设备产生密钥（这是默认的行为）。如果密钥是在设备外产生的，请确保其过程的正确性。
 
-- Not all data is stored encrypted. If storing data on flash, check if the method you are using (library, API, etc.) supports flash encryption.
+- 不是所有的数据都会被加密存储。如果需要在 flash 上存储数据，请先检查你所使用的方法（库、API 等）是否支持 flash 加密。
 
-- Flash encryption does not prevent an attacker from understanding the high-level layout of the flash. This is because the same AES key is used for every pair of adjacent 16 byte AES blocks. When these adjacent 16 byte blocks contain identical content (such as empty or padding areas), these blocks will encrypt to produce matching pairs of encrypted blocks. This may allow an attacker to make high-level comparisons between encrypted devices (ie to tell if two devices are probably running the same firmware version).
+- Flash 加密不能阻止知道 flash 顶层布局的攻击者。这是因为每一对相邻的 16 字节 AES 块使用的是同样的 AES 密钥。当这些相邻的 16 字节块包含相同的内容（例如空区域或填充(pading)区域）时，这些块将会加密生成匹配的加密块对，攻击者可以在加密设备间进行顶层比较（例如判断两个设备运行的固件是否是同一版本）。
 
-- For the same reason, an attacker can always tell when a pair of adjacent 16 byte blocks (32 byte aligned) contain identical content. Keep this in mind if storing sensitive data on the flash, design your flash storage so this doesn't happen (using a counter byte or some other non-identical value every 16 bytes is sufficient).
+- 同样的理由，攻击者还可以判断两个相连的 16 字节块（32 字节对齐的）是否包含相同的内容。因此一定要记住，如果你想在 flash 上面存储敏感的数据，需要对你的存储方法进行进行一定的设计，确保不会发生这样的事（每 16 个字节使用一个字节的计数器或者其它某些不同的值是足够的）。
 
-- Flash encryption alone may not prevent an attacker from modifying the firmware of the device. To prevent unauthorised firmware from runningon the device, use flash encryption in combination with :doc:`Secure Boot <secure-boot>`.
+- 仅使用 Flash 加密功能不能阻止攻击者修改设备的固件。如果要阻止设备运行未被授权的固件，需要结合使用 flash 加密功能和 :doc:`安全启动 <secure-boot>` 功能。
 
 .. _flash-encryption-advanced-features:
 
-Flash Encryption Advanced Features
+Flash 加密高级功能
 ----------------------------------
 
-The following information is useful for advanced use of flash encryption:
+下列信息用于描述 flash 加密的高级功能：
 
-Encrypted Partition Flag
+加密分区标志
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Some partitions are encrypted by default. Otherwise, it is possible to mark any partition as requiring encryption:
+某些分区默认被加密。否则，可以将任何分区标记为需要加密：
 
-In the :doc:`partition table <../api-guides/partition-tables>` description CSV files, there is a field for flags.
 
-Usually left blank, if you write "encrypted" in this field then the partition will be marked as encrypted in the partition table, and data written here will be treated as encrypted (same as an app partition)::
+在描述 :doc:`分区表 <../api-guides/partition-tables>` 的 CSV 文件中，存在一个标志字段。该字段通常是空的。如果你在这个字段中写上 "encrypted"，则这个分区将会在分区表中被标记为"加密的"，写到这里的数据也被当当做加密的（与应用程序分区相同）::
 
    # Name,   Type, SubType, Offset,  Size, Flags
    nvs,      data, nvs,     0x9000,  0x6000
@@ -292,103 +294,101 @@ Usually left blank, if you write "encrypted" in this field then the partition wi
    factory,  app,  factory, 0x10000, 1M
    secret_data, 0x40, 0x01, 0x20000, 256K, encrypted
 
-- None of the default partition tables include any encrypted data partitions.
+- 默认的分区表不包含任何加密数据分区。
 
-- It is not necessary to mark "app" partitions as encrypted, they are always treated as encrypted.
+- "app" 分区不需要被标记为 "encrypted"，因为它们总是被当做加密的。
 
-- The "encrypted" flag does nothing if flash encryption is not enabled.
+- 如果 flash 加密功能未被使能，则 "encrypted" 标志不会起任何作用。
 
-- It is possible to mark the optional ``phy`` partition with ``phy_init`` data as encrypted, if you wish to protect this data from physical access readout or modification.
+- 如果你希望从物理上阻止访问/修改带有 ``phy_init`` 数据的 ``phy`` 分区，你也可以将该分区标记为 "encrypted"。
 
-- It is not possible to mark the ``nvs`` partition as encrypted.
+- ``nvs`` 分区不能被标记为 "encrypted"。
 
 .. _uart-bootloader-encryption:
 
-Enabling UART Bootloader Encryption/Decryption
+使能 UART Bootloader 加密/解密
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default, on first boot the flash encryption process will burn efuses ``DISABLE_DL_ENCRYPT``, ``DISABLE_DL_DECRYPT`` and ``DISABLE_DL_CACHE``:
+默认情况下，在第一次启动时，flash 加密过程会烧写 efuses ``DISABLE_DL_ENCRYPT``、``DISABLE_DL_DECRYPT`` 和 ``DISABLE_DL_CACHE``:
 
-- ``DISABLE_DL_ENCRYPT`` disables the flash encryption operations when running in UART bootloader boot mode.
-- ``DISABLE_DL_DECRYPT`` disables transparent flash decryption when running in UART bootloader mode, even if :ref:`FLASH_CRYPT_CNT` is set to enable it in normal operation.
-- ``DISABLE_DL_CACHE`` disables the entire MMU flash cache when running in UART bootloader mode.
+- ``DISABLE_DL_ENCRYPT``，当运行在 UART bootloader 模式时，禁止 flash 加密功能。
+- ``DISABLE_DL_DECRYPT``，当运行在 UART bootloader 模式时，即使 :ref:`FLASH_CRYPT_CNT` 被设置为以正常操作使能 flash 透明解密，也禁止 flash 透明解密。 
+- ``DISABLE_DL_CACHE``，当运行在 UART bootloader 模式时，禁止整个 MMU flash cache。
 
-It is possible to burn only some of these efuses, and write-protect the rest (with unset value 0) before the first boot, in order to preserve them. For example::
+可以只烧写其中一部分 efuses，让其它 efuses 在第一次启动前写保护（将其值复原为 0），例如 ::
 
   espefuse.py --port PORT burn_efuse DISABLE_DL_DECRYPT
   espefuse.py --port PORT write_protect_efuse DISABLE_DL_ENCRYPT
 
-(Note that all 3 of these efuses are disabled via one write protect bit, so write protecting one will write protect all of them. For this reason, it's necessary to set any bits before write-protecting.)
+(注意，通过一次写保护，这三个 efuses 都会被禁止。因此，有必要在写保护前设置所有的比特。)
 
-**IMPORTANT**: Write protecting these efuses to keep them unset is not currently very useful, as ``esptool.py`` does not support writing or reading encrypted flash.
+**IMPORTANT**: 当前，对这些 efuses 写保护使其复原不是很有用，因为 ``esptool.py`` 不支持读/写加密的 flash。
 
-**IMPORTANT**: If ``DISABLE_DL_DECRYPT`` is left unset (0) this effectively makes flash encryption useless, as an attacker with physical access can use UART bootloader mode (with custom stub code) to read out the flash contents.
+**IMPORTANT**: 如果 ``DISABLE_DL_DECRYPT`` 被复原（0），这会使 flash 加密不起作用，因为进行物理访问的攻击者可以使用 UART bootloader 模式（使用自定义的桩代码）读出 flash 中的内容。
 
 .. _setting-flash-crypt-config:
 
-Setting FLASH_CRYPT_CONFIG
+设置 FLASH_CRYPT_CONFIG
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ``FLASH_CRYPT_CONFIG`` efuse determines the number of bits in the flash encryption key which are "tweaked" with the block offset. See :ref:`flash-encryption-algorithm` for details.
+efuse ``FLASH_CRYPT_CONFIG`` 用于判断 flash 加密密钥的比特数，具体细节请参考 :ref:`flash-encryption-algorithm`。
 
-First boot of the bootloader always sets this value to the maximum `0xF`.
+bootloader 在第一次启动时总是会将这个值设为最大值 `0xF`。
 
-It is possible to write these efuse manually, and write protect it before first boot in order to select different tweak values. This is not recommended.
+可以在第一次启动前对该 efuse 进行手工写，使其写保护，以选择不同的调整值。不过不推荐这样做。
 
-It is strongly recommended to never write protect ``FLASH_CRYPT_CONFIG`` when it the value is zero. If this efuse is set to zero, no bits in the flash encryption key are tweaked and the flash encryption algorithm is equivalent to AES ECB mode.
+强烈推荐当 ``FLASH_CRYPT_CONFIG`` 的值被设置为零时不要使其写保护。如果它被设置零，flash 加密密钥中没有比特会被调整，flash 加密算法与 AES ECB 模式相同。
 
-
-Technical Details
+技术细节
 -----------------
 
-The following sections provide some reference information about the operation of flash encryption.
+下面的章节将介绍 flash 加密操作的一些参考信息。
 
 .. _FLASH_CRYPT_CNT:
 
 FLASH_CRYPT_CNT efuse
 ^^^^^^^^^^^^^^^^^^^^^
 
-``FLASH_CRYPT_CNT`` is an 8-bit efuse field which controls flash encryption. Flash encryption enables or disables based on the number of bits in this efuse which are set to "1":
+``FLASH_CRYPT_CNT`` 是一个 8 比特的字段，用于控制 flash 加密。Flash 加密的使能/禁止就是基于该 efuse 中被设置为 "1" 的比特的数量。
 
-- When an even number of bits (0,2,4,6,8) are set: Flash encryption is disabled, any encrypted data cannot be decrypted.
+- 当偶数比特(0,2,4,6,8)被设置时：Flash 加密被禁止，所有加密的数据将不能被解密。
 
-  - If the bootloader was built with "Enable flash encryption on boot" then it will see this situation and immediately re-encrypt the flash wherever it finds unencrypted data. Once done, it sets another bit in the efuse to '1' meaning an odd number of bits are now set.
+  - 如果在编译 bootloader 时选择了 "Enable flash encryption on boot"，则 bootloader 遇到的就是这种情形，它会立即对所找都的所有为加密数据进行加密，将 efuse 中的其它比特设置为 '1'，表示当前奇数比特被设置了。
+  
+    1. 第一次明码文本启动时，比特计数值是 0，bootloader 会将其修改为 1（值 0x1）。
+    2. 在下一次明码文本更新后，比特计数值被手工设置 2（值 0x3）。重新加密后，bootloader 会将比特计数值改为 3（值 0x7）。
+    3. 在下一次明码文本更新后，比特计数值被手工设置 4（值 0x0F）。重新加密后，bootloader 会将比特计数值改为 5（值 0x1F）。
+    4. 在下一次明码文本更新后，比特计数值被手工设置 6（值 0x3F）。重新加密后，bootloader 会将比特计数值改为 7（值 0x7F）。
 
-    1. On first plaintext boot, bit count has brand new value 0 and bootloader changes it to bit count 1 (value 0x01) following encryption.
-    2. After next plaintext flash update, bit count is manually updated to 2 (value 0x03). After re-encrypting the bootloader changes efuse bit count to 3 (value 0x07).
-    3. After next plaintext flash, bit count is manually updated to 4 (value 0x0F). After re-encrypting the bootloader changes efuse bit count to 5 (value 0x1F).
-    4. After final plaintext flash, bit count is manually updated to 6 (value 0x3F). After re-encrypting the bootloader changes efuse bit count to 7 (value 0x7F).
+- 当奇数比特(1,3,5,7)被设置时：透明读取加密 flash 被使能。
 
-- When an odd number of bits (1,3,5,7) are set: Transparent reading of encrypted flash is enabled.
-
-- After all 8 bits are set (efuse value 0xFF): Transparent reading of encrypted flash is disabled, any encrypted data is permanently inaccessible. Bootloader will normally detect this condition and halt. To avoid use of this state to load unauthorised code, secure boot must be used or :ref:`FLASH_CRYPT_CNT` must be write-protected.
-
+- 当所有的 8 比特（efuse 值 0xFF）被设置后：透明地读加密 flash 被禁止，所有的加密数据将永久不可访问。bootloader 会检测到这个条件，然后挂起。如果要绕过这种状态来加载为授权的代码，必须使用安全启动或 :ref:`FLASH_CRYPT_CNT` 被写保护。
 
 .. _flash-encryption-algorithm:
 
-Flash Encryption Algorithm
+Flash 加密算法
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- AES-256 operates on 16 byte blocks of data. The flash encryption engine encrypts and decrypts data in 32 byte blocks, two AES blocks in series.
+- AES-256 操作在数据的 16 字节块之上。flash 加密引擎以 32 字节块（两个 AES 块）加密/解密数据。
 
-- AES algorithm is used inverted in flash encryption, so the flash encryption "encrypt" operation is AES decrypt and the "decrypt" operation is AES encrypt. This is for performance reasons and does not alter the effectiveness of the algorithm.
+- AES 算法被用于逆向 falsh 加密，因此 flash 加密的加密操作就是 AES 的解密，解密操作就是 AES 加密。这样做是性能的原因，且不会改变算法的性能。
 
-- The main flash encryption key is stored in efuse (BLK2) and by default is protected from further writes or software readout.
+- 主 flash 加密密钥存储在 efuse (BLK2) 中，且默认具有写保护和软件读保护。
 
-- Each 32 byte block (two adjacent 16 byte AES blocks) is encrypted with a unique key. The key is derived from the main flash encryption key in efuse, XORed with the offset of this block in the flash (a "key tweak").
+- 每 32 字节块（两个相连的 16 字节 AES 块）使用一个唯一的密钥进行加密。该密钥由 efuse 中的主 flash 加密密钥推断（与 flash 中该块的偏移量异或，这个偏移量又叫做 "密钥调整值"）而来。
 
-- The specific tweak depends on the setting of ``FLASH_CRYPT_CONFIG`` efuse. This is a 4 bit efuse, where each bit enables XORing of a particular range of the key bits:
+- 还需要根据 efuse ``FLASH_CRYPT_CONFIG`` 的值进行特殊调整。这是一个 4 比特的 efuse，其中每个比特都需要与密钥的某个范围内的比特进行异或：。 
 
-  - Bit 1, bits 0-66 of the key are XORed.
-  - Bit 2, bits 67-131 of the key are XORed.
-  - Bit 3, bits 132-194 of the key are XORed.
-  - Bit 4, bits 195-256 of the key are XORed.
+  - 比特 1 与密钥的比特 0-66 进行异或。
+  - 比特 2 与密钥的比特 67-131 进行异或。
+  - 比特 3 与密钥的比特 132-194 进行异或。
+  - 比特 4 与密钥的比特 195-256 进行异或。
 
-  It is recommended that ``FLASH_CRYPT_CONFIG`` is always left to set the default value `0xF`, so that all key bits are XORed with the block offset. See :ref:`setting-flash-crypt-config` for details.
+推荐将 ``FLASH_CRYPT_CONFIG`` 保持为默认值 `0xF`，这样所有的比特都是直接与块的偏移量进行异或的。具体细节请查看 :ref:`setting-flash-crypt-config`。
 
-- The high 19 bits of the block offset (bit 5 to bit 23) are XORed with the main flash encryption key. This range is chosen for two reasons: the maximum flash size is 16MB (24 bits), and each block is 32 bytes so the least significant 5 bits are always zero.
+- 块偏移量的高 19 比特（比特 5 ~ 比特 23）被用于与主 flash 加密密钥进行异或。选择这个比特范围有两个原因： flash 的最大容量是 16 MB（24 个比特）；每个块是 32 字节的，因此最低 5 比特总是零。
 
-- There is a particular mapping from each of the 19 block offset bits to the 256 bits of the flash encryption key, to determine which bit is XORed with which. See the variable ``_FLASH_ENCRYPTION_TWEAK_PATTERN`` in the espsecure.py source code for the complete mapping.
+- 19 比特的块偏移量与 flash 加密密钥之间存在一个特殊的映射，用于判断哪个比特是用于异或的。关于完整的映射关系，请查看 espsecure.py 源文件中的变量 ``_FLASH_ENCRYPTION_TWEAK_PATTERN``。
 
-- To see the full flash encryption algorithm implemented in Python, refer to the `_flash_encryption_operation()` function in the espsecure.py source code.
+- 如果想要查看用 Python 语言写的完整的 flash 加密算法，请参考 espsecure.py 源文件中的函数 `_flash_encryption_operation()`。
 
