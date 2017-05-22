@@ -1,6 +1,6 @@
-ESP-IDF ble_advertising app
-====================
+ESP-IDF ble_advertising 
+======================================
 
-This is a BLE advertising demo with virtual HCI interface. Send Reset/ADV_PARAM/ADV_DATA/ADV_ENABLE HCI command for BLE advertising.
+这是一个使用虚拟 HCI 接口的 BLE 广播示例，可以发送 Reset/ADV_PARAM/ADV_DATA/ADV_ENABLE HCI 命令。
 
 

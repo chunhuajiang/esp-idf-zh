@@ -101,7 +101,7 @@
 |   40   |     docs/api-reference/system/index.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  132   |     docs/api-reference/system/log.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  376   |     docs/api-reference/system/mem_alloc.rst                     |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
-| 1065   |     docs/api-reference/system/deep_sleep.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)   |    翻译中
+| 1065   |     docs/api-reference/system/deep_sleep.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  908   |     docs/api-reference/system/intr_alloc.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  348   |     docs/api-reference/system/ota.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |    3   |     docs/contribute/index.rst                                   |     |    
@@ -110,14 +110,14 @@
 | 1164   |     docs/contribute/contributor-agreement.rst                   |     |    
 |   83   |     docs/about.rst                                              |     |    
 |  846   |     docs/COPYRIGHT.rst                                          |  -  |    
-|   96   |     examples/bluetooth/a2dp_sink/README.rst                     |     |    
-|   86   |     examples/bluetooth/gatt_server_service_table/README.rst     |     |    
-|   55   |     examples/bluetooth/blufi/README.rst                         |     |    
-|   88   |     examples/bluetooth/gatt_security_server/README.rst          |     |    
-|   89   |     examples/bluetooth/gatt_server/README.rst                   |     |    
-|   21   |     examples/bluetooth/ble_adv/README.rst                       |     |    
-|   36   |     examples/bluetooth/controller_hci_uart/README.rst           |     |    
-|   19   |     examples/bluetooth/gatt_client/README.rst                   |     |    
+|   96   |     examples/bluetooth/a2dp_sink/README.rst                     |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   86   |     examples/bluetooth/gatt_server_service_table/README.rst     |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   55   |     examples/bluetooth/blufi/README.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   88   |     examples/bluetooth/gatt_security_server/README.rst          |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   89   |     examples/bluetooth/gatt_server/README.rst                   |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   21   |     examples/bluetooth/ble_adv/README.rst                       |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   36   |     examples/bluetooth/controller_hci_uart/README.rst           |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   19   |     examples/bluetooth/gatt_client/README.rst                   |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  304   |     CONTRIBUTING.rst                                            |  -  |    
 
 字数统计：共 59896 字。

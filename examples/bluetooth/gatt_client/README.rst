@@ -1,5 +1,5 @@
-ESP-IDF GATT CLIENT demo
+ESP-IDF GATT CLIENT 示例
 ========================
 
-This is the demo for user to use ESP_APIs to create a GATT Client.
+本示例用于向用户演示如何使用 ESP_API 创建 GATT Client。
 

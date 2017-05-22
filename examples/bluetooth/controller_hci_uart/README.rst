@@ -1,7 +1,4 @@
-ESP-IDF UART HCI Controller
+ESP-IDF UART HCI 控制器
 ===========================
 
-This is a btdm controller use UART as HCI IO. This require the UART device support RTS/CTS mandatory.
-It can do the configuration of UART number and UART baudrate by menuconfig.
-
-
+这是一个使用 UART 作为 HCI IO 的 btdm 控制器。这需要 UART 设备支持 RTC/CTS。UART 的编号和波特率都是可以通过配置菜单进行配置的。
