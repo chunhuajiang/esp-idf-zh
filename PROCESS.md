@@ -23,11 +23,11 @@
 |  713   |     docs/api-guides/deep-sleep-stub.rst                         |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |   39   |     docs/api-guides/index.rst                                   |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  785   |     docs/api-guides/core_dump.rst                               |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
-|    3   |     docs/api-guides/ulp_macros.rst                              |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
+|    3   |     docs/api-guides/ulp_macros.rst                              |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 | 4040   |     docs/api-guides/build-system.rst                            |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
 | 1242   |     docs/api-guides/openocd.rst                                 |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成 
-| 1384   |     docs/api-guides/partition-tables.rst                        |     |   
-| 3160   |     docs/api-guides/ulp_instruction_set.rst                     |     |   
+| 1384   |     docs/api-guides/partition-tables.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成 
+| 3160   |     docs/api-guides/ulp_instruction_set.rst                     |  -  |   
 |  421   |     docs/api-guides/unit-tests.rst                              |     |   
 | 1857   |     docs/api-guides/general-notes.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |  100   |     docs/resources.rst                                          |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
@@ -52,9 +52,9 @@
 |   29   |     docs/hw-reference/index.rst                                 |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成     
 |  509   |     docs/hw-reference/modules-and-boards.rst                    |  [tidyjiang8](https://github.com/tidyjiang8)  |  完成      
 |   22   |     docs/api-reference/index.rst                                |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
-|   26   |     docs/api-reference/wifi/index.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |    
-|   37   |     docs/api-reference/wifi/esp_smartconfig.rst                 |  [tidyjiang8](https://github.com/tidyjiang8)   |    
-|  163   |     docs/api-reference/wifi/esp_wifi.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    
+|   26   |     docs/api-reference/wifi/index.rst                           |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|   37   |     docs/api-reference/wifi/esp_smartconfig.rst                 |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
+|  163   |     docs/api-reference/wifi/esp_wifi.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  408   |     docs/api-reference/template.rst                             |     |    
 |  964   |     docs/api-reference/peripherals/spi_master.rst               |     |    
 |  376   |     docs/api-reference/peripherals/i2s.rst                      |     |    
@@ -109,7 +109,7 @@
 | 1263   |     docs/contribute/documenting-code.rst                        |     |    
 | 1164   |     docs/contribute/contributor-agreement.rst                   |     |    
 |   83   |     docs/about.rst                                              |     |    
-|  846   |     docs/COPYRIGHT.rst                                          |     |    
+|  846   |     docs/COPYRIGHT.rst                                          |  -  |    
 |   96   |     examples/bluetooth/a2dp_sink/README.rst                     |     |    
 |   86   |     examples/bluetooth/gatt_server_service_table/README.rst     |     |    
 |   55   |     examples/bluetooth/blufi/README.rst                         |     |    
@@ -118,6 +118,6 @@
 |   21   |     examples/bluetooth/ble_adv/README.rst                       |     |    
 |   36   |     examples/bluetooth/controller_hci_uart/README.rst           |     |    
 |   19   |     examples/bluetooth/gatt_client/README.rst                   |     |    
-|  304   |     CONTRIBUTING.rst                                            |     |    
+|  304   |     CONTRIBUTING.rst                                            |  -  |    
 
 字数统计：共 59896 字。
