@@ -25,7 +25,7 @@
 |  785   |     docs/api-guides/core_dump.rst                               |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成
 |    3   |     docs/api-guides/ulp_macros.rst                              |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
 | 4040   |     docs/api-guides/build-system.rst                            |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
-| 1242   |     docs/api-guides/openocd.rst                                 |  [tidyjiang8](https://github.com/tidyjiang8)   |   翻译中
+| 1242   |     docs/api-guides/openocd.rst                                 |  [tidyjiang8](https://github.com/tidyjiang8)   |   完成 
 | 1384   |     docs/api-guides/partition-tables.rst                        |     |   
 | 3160   |     docs/api-guides/ulp_instruction_set.rst                     |     |   
 |  421   |     docs/api-guides/unit-tests.rst                              |     |   

@@ -1,66 +1,46 @@
-Debugging
+调试
 =========
 
-OpenOCD setup for ESP32
+为 ESP32 设置 OpenOCD
 -----------------------
 
-The ESP31 and ESP32 have two powerful Xtensa cores, allowing for a great variety of program architectures. The FreeRTOS
-OS that comes with ESP-IDF is capable of multi-core pre-emptive multithreading, allowing for an intuitive way of writing software. 
+ESP321 和 ESP32 带有两个功能强劲的 Xtensa 核，支持大量的程序架构。ESP-IDF 中的 FreeRTOS 具有多核抢占式多线程功能，支持以最直观的方式编写代码。
 
-The downside of the ease of programming is that debugging without the right tools is harder: figuring out a bug that is caused 
-by two threads, maybe even running simultaneously on two different CPU cores, can take a long time when all you have are printf 
-statements. A better and in many cases quicker way to debug such problems is by using a debugger, connected to the processors over
-a debug port. 
+当然这也带来一个弊端，即当没有合适的工具时，程序的调试变得更加艰难：如果一个 bug 是由两个线程引起的，这两个线程可能会同时运行在两个 CPU 核上，如果你所仅能使用 printf 语句，则调试过程可能会花费你的大量时间。调试这种问题的更好的以及更快速（大多数情形下）的方法是使用一个调试器，将它连接到处理器的调试端口。
 
-Espressif has ported OpenOCD to support the ESP32 processor and the multicore FreeRTOS that will be the foundation of most ESP32
-apps, and has written some tools to help with features OpenOCD does not support natively. These are all available for free, and 
-this document describes how to install and use them.
+乐鑫已经将 OpenOCD 和多核 FreeRTOS 移植到 ESP32 处理器上，并添加了一些 OpenOCD 原生并未支持的有用功能。这些都是免费的，本文档就是用于描述如何安装并使用它们。
 
-JTAG adapter hardware
+
+JTAG 适配器硬件
 ---------------------
 
-You will need a JTAG adapter that is compatible with both the voltage levels on the ESP32 as well as with the OpenOCD software. 
-The JTAG port on the ESP32 is an industry-standard JTAG port which lacks (and does not need) the TRST pin. The JTAG I/O pins
-all are powered from the VDD_3P3_RTC pin (which normally would be powered by a 3.3V rail) so the JTAG adapter needs to be
-able to work with JTAG pins in that voltage range. On the software side, OpenOCD supports a fair amount of JTAG adapters.
-See http://openocd.org/doc/html/Debug-Adapter-Hardware.html for an (unfortunately slightly incomplete) list of the adapters 
-OpenOCD works with. This page lists SWD-compatible adapters as well; take note that the ESP32 does not support SWD.
+你需要一个电压值既兼容 ESP32 又兼容 OpenOCD 软件的 JTAG 适配器。ESP32 上面的 JTAG 端口是一个工业级的没有（也不需要）TRST 引脚的 JTAG 端口。JTAG 的 I/O 引脚都通过 VDD_3P3_RTC 引脚进行供电（通常是 3.3 V），因此 JTAG 适配器和 JTAG 引脚应该能在该电压范围内正常工作。在软件方面，OpenOCD 支持大量的 JTAG 适配器，具体的适配器列表（不是太完整）请查阅 http://openocd.org/doc/html/Debug-Adapter-Hardware.html。 该页面也列举了 SWD 兼容的适配器；需要说明的是，ESP32 不支持 SWD。
 
-At Espressif, we have tested the TIAO USB Multi-protocol Adapter board as well as the Flyswatter2, which are both USB2.0 high-speed
-devices and give a good throughput. We also tested a J-link-compatible and an EasyOpenJTAG adapter; both worked as well but are 
-somewhat slower.
+在乐鑫，我们已经测试了 TIAO USB Multi-protocol 适配器电路板以及 Flyswatter2，这二者都是 USB2.0 的高速设备，具有良好的吞吐量。我们还测试了 J-Link 兼容的适配器以及 EasyOpenJTAG 适配器，它们都能正常工作，不过速度有点慢。
 
-The minimal signalling to get a working JTAG connection are TDI, TDO, TCK, TMS and Gnd. Some JTAG debuggers also need a connection 
-from the ESP32 power line to a line called e.g. Vtar to set the working voltage. SRST can optionally be connected to the CH_PD of 
-the ESP32, although for now, support in OpenOCD for that line is pretty minimal.
+JTAG 工作所需要的最少信号线包括 TDI、TDO、TCK、TMS 和 Gnd。某些 JTAG 适配器还需要将 ESP32 的电源线连接到一根叫做 Vtar 的信号线上，以提供工作电压。另外，还可以将 SRST 可选地连接到 ESP32 的 CH_PD 引脚，OpenOCD 中很少使用该信号线。
 
-Installing OpenOCD
+安装 OpenOCD
 ------------------
 
-The sources for the ESP32-enabled variant of OpenOCD are available from `Espressifs Github <https://github.com/espressif/openocd-esp32>`_. 
-To download the source, use the following commands::
+ESP32 的变体版 OpenOCD 的源码位于 `Espressifs Github <https://github.com/espressif/openocd-esp32>`_，你可以使用下面的命令下载该源码 ::
 
     git clone --recursive https://github.com/espressif/openocd-esp32.git
     cd openocd-esp32
 
-For compilation of OpenOCD, please refer to the README, README.OSX and README.Windows file in the openocd-esp32 directory. You can skip
-the ``make install`` step if you want.
+具体的编译步骤请参考 openocd-esp32 目录下的 README、README.OSX 和 README.Windows。当然，你也可以跳过 ``make install`` 这一步。
 
-Configuring the ESP32 target in OpenOCD
+在 OpenOCD 中配置 ESP32 目标
 ---------------------------------------
 
-After OpenOCD is compiled (and optionally installed) and the JTAG adapter is connected to the ESP32 board, everything is ready to
-invoke OpenOCD for the first time. To do this, OpenOCD needs to be told what JTAG adapter to use as well as what type of board
-and processor the JTAG adapter is connected to. It is the easiest to do both using a configuration file. A template configuration
-file (esp32.cfg) is included in the same directory as this file. A way to use this would be:
+当 OpenOCD 编译（以及可选地安装）完，JTAG 适配器连接到 ESP32 开发板后，使用 OpenOCD 就以及基本准备就绪了。此外，OpenOCD 还需要知道使用的是什么 JTAG 适配器，以及适配器所连接的是什么开发板和处理器。实现该目的的最简单的方式是使用一个配置文件。在本文档的同一目录下包含一个配置文件模板，你可以这样使用它：
 
-- Copy esp32.cfg to the openocd-esp32 directory
-- Edit the copied esp32.cfg file. Most importantly, change the ``source [find interface/ftdi/tumpa.cfg]`` line to reflect the
-  physical JTAG adapter connected.
-- Open a terminal and ``cd`` to the openocd-esp32 directory.
-- Run ``./src/openocd -s ./tcl -f ./esp32.cfg`` to start OpenOCD
+- 将 esp32.cfg 拷贝到 openocd-esp32 目录。
+- 编辑所拷贝的文件 esp32.cfg。最重要的是修改 ``source [find interface/ftdi/tumpa.cfg]`` 这一行，它用于说明所连接的物理 JTAG 适配器。
+- 打开一个终端，``cd`` 到 openocd-esp32 目录。
+- 运行 ``./src/openocd -s ./tcl -f ./esp32.cfg`` 启动 OpenOCD。
 
-You should now see something like this::
+然后你将看到类似下面的输出 ::
 
     user@machine:~/esp32/openocd-esp32$ ./src/openocd -s ./tcl/ -f ../openocd-esp32-tools/esp32.cfg 
     Open On-Chip Debugger 0.10.0-dev-00446-g6e13a97-dirty (2016-08-23-16:36)
@@ -76,56 +56,37 @@ You should now see something like this::
     Info : esp32.cpu0: Core was reset (pwrstat=0x5F, after clear 0x0F).
 
 
-- If you see an error indicating permission problems, please see the 'Permissions delegation' bit in the OpenOCD README
-- If you see JTAG errors (...all ones/...all zeroes) please check your connections and see if everything is powered on.
+- 如果你碰到了关于权限的问题，请查阅 OpenOCD README 文档中的 'Permissions delegation'。
+- 如果你碰到了错误 (...all ones/...all zeroes)，请检查你的连线，并确实是否已上电。
 
-Connecting a debugger to OpenOCD
+将调试器连接到 OpenOCD
 --------------------------------
 
-OpenOCD should now be ready to accept gdb connections. If you have compiled the ESP32 toolchain using Crosstool-NG, or
-if you have downloaded a precompiled toolchain from the Espressif website, you should already have xtensa-esp32-elf-gdb, 
-a version of gdb that can be used for this. First, make sure the project you want to debug is compiled and flashed 
-into the ESP32's SPI flash. Then, in a different console than OpenOCD is running in, invoke gdb. For example, for the 
-template app, you would do this like such::
+OpenOCD 现在已经准备接受 gdb 连接了。如果你使用 Crosstool-NG 编译好了 ESP32 的工具链，或者从乐鑫官方下载了预编译的工具链，则该工具链中已包含 xtensa-esp32-elf-gdb，你可以直接用该 gdb 进行调试。首先，确保你的想要调试的工程已经被编译并烧写到 ESP32 的 SPI flahs 中了。然后，在另一个控制台（而非运行 OpenOCD 的控制台）中运行 gdb。例如，对于 template app ::
 
     cd esp-idf-template
     xtensa-esp32-elf-gdb -ex 'target remote localhost:3333' ./build/app-template.elf 
 
+然后它应该会显示 gdb 提示符。
 
-This should give you a gdb prompt.
-
-FreeRTOS support
+FreeRTOS 的支持
 ----------------
 
-OpenOCD has explicit support for the ESP-IDF FreeRTOS; FreeRTOS detection can be disabled in esp32.conf. When enabled,
-gdb can see FreeRTOS tasks as threads. Viewing them all can be done using the gdb ``i threads`` command, changing
-to a certain task is done with ``thread x``, with x being the number of the thread. All threads can be switched to
-except for a thread actually running on the other CPU, please see ``ESP32 quirks`` for more information.
+OpenOCD 已经明确地支持 ESP-IDF FreeRTOS 了；可以在 esp32.conf 中禁止 FreeRTOS 检测。如果使能了 FreeRTOS 检测，gdb 则会将 FreeRTOS 任务当做线程处理。查看这些线程可以使用 gdb 命令 ``i threads``，切换到某个线程可以使用命令 ``thread x``，其中 x 是线程的数字。可以切换到除了正在另一个 CPU 上运行的线程之前的其它所有线程，更多信息请参考 ``ESP32 quirks``。
 
 
 ESP32 quirks
 ------------
 
-Normal gdb breakpoints (``b myFunction``) can only be set in IRAM, because that memory is writable. Setting these types of
-breakpoints in code in flash will not work. Instead, use a hardware breakpoint (``hb myFunction``). The esp32 supports
-2 hardware breakpoints. It also supports two watchpoint, so two variables can be watched for change or read by the gdb
-command ``watch myVariable``.
+常规的 gdb 断点（``b myFunction``）只能设置在 IRAM 中，因为这段内存是可写的。在 flash 中的代码中设置这种类型的代码是无效的。它还可以支持两个观察点，因此可以使用 gdb 命令 ``watch myVariable`` 来观察/读取两个变量的改动。
 
-Connecting gdb to the APP or PRO cpu happens by changing the port gdb connects to. ``target remote localhost:3333`` connects
-to the PRO CPU, ``target remote localhost:3334`` to the APP CPU. Hardware-wise, when one CPU is halted because of debugging
-reasons, the other one will be halted as well; resuming also happens simultaneously.
 
-Because gdb only sees the system from the point of view of the selected CPU, only the FreeRTOS tasks that are suspended
-and the task running on the CPU gdb is connected to, will be shown correctly. The task that was active on the other
-cpu can be inspected, but its state may be wildly inconsistent.
+你可以通过改变端口号将 gdb 连接到 APP CPU 或者 PRO CPU。``target remote localhost:3333`` 可以连接到 PRO CPU，``target remote localhost:3334`` 可以连接到 APP CPU。硬件方面，当某个 CPU 由于调试原因被挂起时，另一个 CPU 也会被挂起；恢复也是同时发生的。
 
-The ESP-IDF code has the option of compiling in various support options for OpenOCD: it can stop execution when the first 
-thread is started and break the system if a panic or unhandled exception is thrown. Both options are enabled by default 
-but can be disabled using the esp-idf configuration menu. Please see the ``make menuconfig`` menu for more details.
+由于 gdb 只能看到以所选 CPU 的视角所对应的系统，只有挂起的任务和正在 gdb 所连接的 CPU 上面运行的任务会被正确地显示。另一个 cpu 上面的活动的任务也可以被查看，不过它的状态可能非常不连续。
 
-Normally, under OpenOCD, a board can be reset by entering 'mon reset' or 'mon reset halt' into gdb. For
-the ESP32, these commands work more or less, but have side effects. First of all, an OpenOCD reset only
-resets the CPU cores, not the peripherals, which may lead to undefined behaviour if software assumes the
-after-reset state of peripherals. Secondly, 'mon reset halt' stops before FreeRTOS is initialized. 
-OpenOCD assumes (in the default configuration, you can change this by editing esp32.cfg) a running 
-FreeRTOS and may get confused.
+ESP-IDF 针对 OpenOCD 的各种功能提供了对应的编译选项：可以在第一个线程启动后停止执行执行；当抛出 panic 或者未处理异常后打断系统。这两个选项默认都是使能的，但是可以使用 esp-idf 配置选项对其进行禁止，更多细节请参考 ``make menuconfig`` 菜单。
+
+正常情况下，在 OpenOCD 下面，可以通过向 ddb 中输入 'mon reset' 或 'mon reset halt' 对开发板进行复位。对于 ESP32，这些功能基本都能工作，但是有一些负面影响。首先，OpenoCD 复位只会复位 CPU 核，不会复位外设，因此如果软件依赖了外设复位后的状态，则可能导致产生未定的行为。其次，'mon reset halt' 会在 freeRTOS 初始化前停止，而 OpenOCD 会假设 FreeRTOS 正在运行（默认情况，你也可以编辑 esp32.cfg 进行修改），然后它会变得混淆。
+
+
