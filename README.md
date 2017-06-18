@@ -3,7 +3,8 @@
 本文档是 ESP-IDF 官方文档的中文翻译版。
 
 ## 在线阅读：
-- 中文版地址：[http://iot-fans.xyz/esp/esp-idf-zh/](http://iot-fans.xyz/esp/esp-idf-zh/)
+- 中文版地址：[http://iot-fans.xyz/esp/esp-idf-zh/](http://iot-fans.xyz/esp/esp-idf-zh/) (暂时无法访问)
+- 中文版地址2：[http://esp-idf-zh.readthedocs.io/zh_CN/latest/](http://esp-idf-zh.readthedocs.io/zh_CN/latest/)
 - 英文版地址：[http://esp-idf.readthedocs.io/en/latest/](http://esp-idf.readthedocs.io/en/latest/)
 
 ## 参与翻译：
