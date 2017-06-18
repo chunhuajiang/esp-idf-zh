@@ -7,7 +7,7 @@ ESP-IDF 编程指导(中文版)
 
    该中文文档非乐鑫官方文档，而是由个人翻译的，以方便广大初学者。
    
-   文档源码位于 https://github.com/tidyjiang8/esp-idf-zh，欢迎 Star、参与翻译。
+   文档源码位于 https://github.com/tidyjiang8/esp-idf-zh，欢迎大家 Star、参与翻译。
 
    个人的能力、精力都非常有限，如果读者在阅读时发现任何翻译有误的地方，请到 `这里 <https://github.com/tidyjiang8/esp-idf-zh/issues/new>`_ 指出，或直接提交PR。
    
