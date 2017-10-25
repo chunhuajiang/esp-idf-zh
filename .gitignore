@@ -2,6 +2,8 @@
 *.o
 *.pyc
 
+.REQUIREMENT_FLAG
+
 # gtags
 GTAGS
 GRTAGS
@@ -36,4 +38,5 @@ tools/unit-test-app/build
 
 # AWS IoT Examples require device-specific certs/keys
 examples/protocols/aws_iot/*/main/certs/*.pem.*
+
 
