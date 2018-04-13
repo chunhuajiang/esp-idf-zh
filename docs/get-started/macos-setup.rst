@@ -19,7 +19,7 @@
 
 macOS 版的 ESP32 工具链可以从 Espressif 的网站下载：
 
-https://dl.espressif.com/dl/xtensa-esp32-elf-osx-1.22.0-61-gab8375a-5.2.0.tar.gz
+https://dl.espressif.com/dl/xtensa-esp32-elf-osx-1.22.0-80-g6c4433a-5.2.0.tar.gz
 
 下载完成后，将它解压到 ``~/esp`` 目录 ::
 
