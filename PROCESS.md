@@ -56,7 +56,7 @@
 |   37   |     docs/api-reference/wifi/esp_smartconfig.rst                 |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  163   |     docs/api-reference/wifi/esp_wifi.rst                        |  [tidyjiang8](https://github.com/tidyjiang8)   |    完成
 |  408   |     docs/api-reference/template.rst                             |     |    
-|  964   |     docs/api-reference/peripherals/spi_master.rst               |     |    
+|  964   |     docs/api-reference/peripherals/spi_master.rst               |  [reiyawea](https://github.com/reiyawea)   |    
 |  376   |     docs/api-reference/peripherals/i2s.rst                      |     |    
 |   66   |     docs/api-reference/peripherals/sigmadelta.rst               |     |    
 |  151   |     docs/api-reference/peripherals/dac.rst                      |     |    
